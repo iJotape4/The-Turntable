@@ -6,6 +6,7 @@
 #include "The_TurnatableCharacter.h"
 #include "HorrorCharacter.generated.h"
 
+class UTTInteractionComponent;
 class USpotLightComponent;
 class UInputAction;
 
@@ -24,13 +25,20 @@ class THE_TURNATABLE_API AHorrorCharacter : public AThe_TurnatableCharacter
 	/** Player light source */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	USpotLightComponent* SpotLight;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	UTTInteractionComponent* InteractionComponent;
 	
 protected:
 
-	/** Fire weapon input action */
+	/** Sprint input action */
 	UPROPERTY(EditAnywhere, Category ="Input")
 	UInputAction* SprintAction;
 
+	/** Interact input action */
+	UPROPERTY(EditAnywhere, Category ="Input")
+	UInputAction* InteractAction;
+	
 	/** If true, we're sprinting */
 	bool bSprinting = false;
 

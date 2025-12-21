@@ -9,6 +9,7 @@
 #include "Components/SpotLightComponent.h"
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
+#include "Public/Variant_Horror/TTInteractionComponent.h"
 
 AHorrorCharacter::AHorrorCharacter()
 {
@@ -22,6 +23,8 @@ AHorrorCharacter::AHorrorCharacter()
 	SpotLight->AttenuationRadius = 1050.0f;
 	SpotLight->InnerConeAngle = 18.7f;
 	SpotLight->OuterConeAngle = 45.24f;
+
+	InteractionComponent = CreateDefaultSubobject<UTTInteractionComponent>(TEXT("Interaction Component"));
 }
 
 void AHorrorCharacter::BeginPlay()
@@ -57,6 +60,7 @@ void AHorrorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 			// Sprinting
 			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AHorrorCharacter::DoStartSprint);
 			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AHorrorCharacter::DoEndSprint);
+			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, InteractionComponent	, &UTTInteractionComponent::PrimaryInteract);
 
 		}
 	}
