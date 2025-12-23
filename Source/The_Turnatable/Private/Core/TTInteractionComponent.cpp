@@ -5,7 +5,6 @@
 
 #include "Core/TTGameplayInterface.h"
 
-
 void UTTInteractionComponent::PrimaryInteract()
 {
 	FCollisionObjectQueryParams ObjectQueryParams;

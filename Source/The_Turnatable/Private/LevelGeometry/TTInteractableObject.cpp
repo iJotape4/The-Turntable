@@ -11,10 +11,9 @@ void ATTInteractableObject::Interact_Implementation(APawn* InstigatorPawn)
 	
 	TArray<AActor*> OverlappingActors;
 	GetOverlappingActors(OverlappingActors, AHorrorCharacter::StaticClass());
-	if (OverlappingActors.Num() > 0)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Interacting with %s"), *GetName());
-	}
+	if (OverlappingActors.Num() <= 0) return;
+
+	UE_LOG(LogTemp, Warning, TEXT("Interacting with %s"), *GetName());
 }
 
 // Sets default values

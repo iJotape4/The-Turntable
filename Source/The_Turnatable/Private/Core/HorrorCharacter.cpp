@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
 #include "Core/TTInteractionComponent.h"
+#include "Inventory/TTInventoryComponent.h"
 
 AHorrorCharacter::AHorrorCharacter()
 {
@@ -25,6 +26,7 @@ AHorrorCharacter::AHorrorCharacter()
 	SpotLight->OuterConeAngle = 45.24f;
 
 	InteractionComponent = CreateDefaultSubobject<UTTInteractionComponent>(TEXT("Interaction Component"));
+	InventoryComponent = CreateDefaultSubobject<UTTInventoryComponent>(TEXT("Inventory Component"));
 }
 
 void AHorrorCharacter::BeginPlay()

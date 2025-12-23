@@ -9,6 +9,7 @@
 class UTTInteractionComponent;
 class USpotLightComponent;
 class UInputAction;
+class UTTInventoryComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateSprintMeterDelegate, float, Percentage);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSprintStateChangedDelegate, bool, bSprinting);
@@ -28,6 +29,9 @@ class THE_TURNATABLE_API AHorrorCharacter : public AThe_TurnatableCharacter
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UTTInteractionComponent* InteractionComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	UTTInventoryComponent* InventoryComponent;
 	
 protected:
 
