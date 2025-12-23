@@ -33,7 +33,6 @@ void UTTInventoryComponent::PostInitProperties()
 void UTTInventoryComponent::AddItem(UTTItem* NewItem)
 {
 	Inventory.Add(NewItem);
-	UE_LOG(LogTemp, Warning, TEXT("Added a new item to inventory: %s"), *NewItem->ItemName.ToString());
 }
 
 void UTTInventoryComponent::RemoveItem(UTTItem* ItemToRemove)

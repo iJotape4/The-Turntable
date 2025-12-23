@@ -22,7 +22,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
 	float InteractionRadius = 150.0f;
 	
-	virtual void Interact_Implementation(APawn* InstigatorPawn) override;
+	virtual bool Interact_Implementation(APawn* InstigatorPawn) override;
 
 	// Sets default values for this actor's properties
 	ATTInteractableObject();

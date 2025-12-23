@@ -28,5 +28,5 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual  void Interact_Implementation(APawn* InstigatorPawn) override;
+	virtual bool Interact_Implementation(APawn* InstigatorPawn) override;
 };

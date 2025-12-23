@@ -22,5 +22,5 @@ class THE_TURNATABLE_API ITTGameplayInterface
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
-	void Interact(APawn* InstigatorPawn);
+	bool Interact(APawn* InstigatorPawn);
 };

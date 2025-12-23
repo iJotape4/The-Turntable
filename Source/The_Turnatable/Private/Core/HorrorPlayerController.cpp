@@ -57,14 +57,14 @@ void AHorrorPlayerController::OnPossess(APawn* aPawn)
 			{
 				HorrorUI = CreateWidget<UHorrorUI>(this, HorrorUIClass);
 				HorrorUI->AddToViewport(0);
+				HorrorUI->SetupCharacter(HorrorCharacter);
 			}
-
-			HorrorUI->SetupCharacter(HorrorCharacter);
 
 			if (!InventoryUI)
 			{
 				InventoryUI = CreateWidget<UTTInventoryUI>(this, InventoryUIClass);
 				InventoryUI->AddToViewport(0);
+				InventoryUI->SetUpInventoryComponent(HorrorCharacter);
 			}
 		}
 	}

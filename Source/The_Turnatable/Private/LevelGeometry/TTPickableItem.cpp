@@ -26,9 +26,9 @@ void ATTPickableItem::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ATTPickableItem::Interact_Implementation(APawn* InstigatorPawn)
+bool ATTPickableItem::Interact_Implementation(APawn* InstigatorPawn)
 {
-	Super::Interact_Implementation(InstigatorPawn);
+	if (!Super::Interact_Implementation(InstigatorPawn)) return false;
 
 	if (ensureAlwaysMsgf(Item, TEXT("Item Data asset is not set on: %s"), *GetActorLabel()))
 	{
@@ -36,8 +36,8 @@ void ATTPickableItem::Interact_Implementation(APawn* InstigatorPawn)
 		{
 			InteractionComponent->OnInteractDelegate.Broadcast(Item);
 			Destroy();
+			return true;
 		}
-		
 	}
-	
+	return false;
 }
