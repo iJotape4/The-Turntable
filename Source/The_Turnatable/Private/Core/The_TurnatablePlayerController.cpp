@@ -1,27 +1,26 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "Variant_Horror/HorrorPlayerController.h"
+#include "Core/The_TurnatablePlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 #include "InputMappingContext.h"
-#include "The_TurnatableCameraManager.h"
-#include "HorrorCharacter.h"
-#include "HorrorUI.h"
+#include "Core/The_TurnatableCameraManager.h"
+#include "Blueprint/UserWidget.h"
 #include "The_Turnatable.h"
-#include "Variant_Horror/UI/TTInventoryUI.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 
-AHorrorPlayerController::AHorrorPlayerController()
+AThe_TurnatablePlayerController::AThe_TurnatablePlayerController()
 {
 	// set the player camera manager class
 	PlayerCameraManagerClass = AThe_TurnatableCameraManager::StaticClass();
 }
 
-void AHorrorPlayerController::BeginPlay()
+void AThe_TurnatablePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	
 	// only spawn touch controls on local player controllers
 	if (ShouldUseTouchControls() && IsLocalPlayerController())
 	{
@@ -42,42 +41,14 @@ void AHorrorPlayerController::BeginPlay()
 	}
 }
 
-void AHorrorPlayerController::OnPossess(APawn* aPawn)
-{
-	Super::OnPossess(aPawn);
-
-	// only spawn UI on local player controllers
-	if (IsLocalPlayerController())
-	{
-		// set up the UI for the character
-		if (AHorrorCharacter* HorrorCharacter = Cast<AHorrorCharacter>(aPawn))
-		{
-			// create the UI
-			if (!HorrorUI)
-			{
-				HorrorUI = CreateWidget<UHorrorUI>(this, HorrorUIClass);
-				HorrorUI->AddToViewport(0);
-			}
-
-			HorrorUI->SetupCharacter(HorrorCharacter);
-
-			if (!InventoryUI)
-			{
-				InventoryUI = CreateWidget<UTTInventoryUI>(this, InventoryUIClass);
-				InventoryUI->AddToViewport(0);
-			}
-		}
-	}
-}
-
-void AHorrorPlayerController::SetupInputComponent()
+void AThe_TurnatablePlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-	
+
 	// only add IMCs for local player controllers
 	if (IsLocalPlayerController())
 	{
-		// Add Input Mapping Contexts
+		// Add Input Mapping Context
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 		{
 			for (UInputMappingContext* CurrentContext : DefaultMappingContexts)
@@ -94,10 +65,11 @@ void AHorrorPlayerController::SetupInputComponent()
 				}
 			}
 		}
-	}	
+	}
+	
 }
 
-bool AHorrorPlayerController::ShouldUseTouchControls() const
+bool AThe_TurnatablePlayerController::ShouldUseTouchControls() const
 {
 	// are we on a mobile platform? Should we force touch?
 	return SVirtualJoystick::ShouldDisplayTouchInterface() || bForceTouchControls;

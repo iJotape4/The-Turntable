@@ -1,8 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "HorrorUI.h"
-#include "HorrorCharacter.h"
+#include "UI/HorrorUI.h"
+
+#include "Core/HorrorCharacter.h"
 
 void UHorrorUI::SetupCharacter(AHorrorCharacter* HorrorCharacter)
 {

@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "Variant_Horror/HorrorGameMode.h"
+#include "Core/HorrorGameMode.h"
 
 AHorrorGameMode::AHorrorGameMode()
 {

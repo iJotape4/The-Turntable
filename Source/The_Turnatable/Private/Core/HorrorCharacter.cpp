@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 
-#include "Variant_Horror/HorrorCharacter.h"
+#include "Core/HorrorCharacter.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -9,7 +9,7 @@
 #include "Components/SpotLightComponent.h"
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
-#include "Public/Variant_Horror/TTInteractionComponent.h"
+#include "Core/TTInteractionComponent.h"
 
 AHorrorCharacter::AHorrorCharacter()
 {

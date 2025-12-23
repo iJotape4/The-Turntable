@@ -1,6 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "The_TurnatableGameMode.h"
+#include "Core/The_TurnatableGameMode.h"
 
 AThe_TurnatableGameMode::AThe_TurnatableGameMode()
 {

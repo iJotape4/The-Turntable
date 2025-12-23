@@ -1,10 +1,9 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TTInteractableObject.h"
-#include "HorrorCharacter.h"
+#include "LevelGeometry/TTInteractableObject.h"
+#include "Core/HorrorCharacter.h"
 #include "Components/SphereComponent.h"
-
 
 void ATTInteractableObject::Interact_Implementation(APawn* InstigatorPawn)
 {

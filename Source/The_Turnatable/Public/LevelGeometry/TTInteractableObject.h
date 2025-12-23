@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Public/Variant_Horror/TTGameplayInterface.h"
+#include "Public/Core/TTGameplayInterface.h"
 #include "TTInteractableObject.generated.h"
 
 class USphereComponent;
