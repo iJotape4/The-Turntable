@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "HorrorPlayerController.generated.h"
 
+class UTTInventoryUI;
 class UInputMappingContext;
 class UHorrorUI;
 
@@ -22,12 +23,18 @@ class THE_TURNATABLE_API AHorrorPlayerController : public APlayerController
 protected:
 
 	/** Type of UI widget to spawn */
-	UPROPERTY(EditAnywhere, Category="Horror|UI")
+	UPROPERTY(EditAnywhere, Category="UI | Stamina")
 	TSubclassOf<UHorrorUI> HorrorUIClass;
 
 	/** Pointer to the UI widget */
 	UPROPERTY()
 	TObjectPtr<UHorrorUI> HorrorUI;
+
+	UPROPERTY(EditAnywhere, Category="UI | Inventory")
+	TSubclassOf<UTTInventoryUI> InventoryUIClass;
+	
+	UPROPERTY()
+	TObjectPtr<UTTInventoryUI> InventoryUI;
 
 public:
 

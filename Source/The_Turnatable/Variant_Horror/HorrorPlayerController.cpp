@@ -9,6 +9,7 @@
 #include "HorrorCharacter.h"
 #include "HorrorUI.h"
 #include "The_Turnatable.h"
+#include "Variant_Horror/UI/TTInventoryUI.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 
 AHorrorPlayerController::AHorrorPlayerController()
@@ -59,9 +60,14 @@ void AHorrorPlayerController::OnPossess(APawn* aPawn)
 			}
 
 			HorrorUI->SetupCharacter(HorrorCharacter);
+
+			if (!InventoryUI)
+			{
+				InventoryUI = CreateWidget<UTTInventoryUI>(this, InventoryUIClass);
+				InventoryUI->AddToViewport(0);
+			}
 		}
 	}
-	
 }
 
 void AHorrorPlayerController::SetupInputComponent()
