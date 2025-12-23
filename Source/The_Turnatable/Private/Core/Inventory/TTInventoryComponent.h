@@ -8,7 +8,7 @@
 
 
 class UTTItem;
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInventoryToggle, bool, Open);
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class THE_TURNATABLE_API UTTInventoryComponent : public UActorComponent
 {
@@ -16,9 +16,12 @@ class THE_TURNATABLE_API UTTInventoryComponent : public UActorComponent
 protected:
 	TArray<UTTItem*> Inventory;
 	// Sets default values for this component's properties
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory")
+	bool bInventoryOpen;
 	
 public:
 	UTTInventoryComponent();
+	FOnInventoryToggle OnInventoryToggleDelegate;
 
 	virtual void PostInitProperties() override;
 
@@ -28,4 +31,5 @@ public:
 	void RemoveItem(UTTItem* ItemToRemove);
 	
 	bool HasItem(UTTItem* ItemToCheck);
+	void ToggleInventory();
 };

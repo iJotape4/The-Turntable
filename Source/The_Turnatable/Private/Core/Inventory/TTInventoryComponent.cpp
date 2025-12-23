@@ -44,3 +44,9 @@ bool UTTInventoryComponent::HasItem(UTTItem* ItemToCheck)
 {
 	return Inventory.Contains(ItemToCheck);
 }
+
+void UTTInventoryComponent::ToggleInventory()
+{
+	bInventoryOpen = !bInventoryOpen;
+	OnInventoryToggleDelegate.Broadcast(bInventoryOpen);
+}

@@ -19,3 +19,8 @@ void UTTInventoryUI::OnAddItem(UTTItem* Item)
 {
 	BP_AddItem(Item);
 }
+
+void UTTInventoryUI::ToggleInventory(bool bOpen)
+{
+	bOpen? AddToViewport() : RemoveFromParent();
+}

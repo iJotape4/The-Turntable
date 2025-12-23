@@ -9,6 +9,7 @@
 #include "Core/HorrorCharacter.h"
 #include "UI/HorrorUI.h"
 #include "The_Turnatable.h"
+#include "Inventory/TTInventoryComponent.h"
 #include "UI/TTInventoryUI.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 
@@ -63,8 +64,16 @@ void AHorrorPlayerController::OnPossess(APawn* aPawn)
 			if (!InventoryUI)
 			{
 				InventoryUI = CreateWidget<UTTInventoryUI>(this, InventoryUIClass);
-				InventoryUI->AddToViewport(0);
 				InventoryUI->SetUpInventoryComponent(HorrorCharacter);
+			}
+
+			// Listen to delegates
+
+			if (UTTInventoryComponent* InventoryComponent = HorrorCharacter->GetComponentByClass<UTTInventoryComponent>())
+			{
+				InventoryComponent->OnInventoryToggleDelegate.AddDynamic(InventoryUI, &UTTInventoryUI::ToggleInventory);
+				InventoryComponent->OnInventoryToggleDelegate.RemoveDynamic(this, &AHorrorPlayerController::ToggleInventory);
+				InventoryComponent->OnInventoryToggleDelegate.AddDynamic(this, &AHorrorPlayerController::ToggleInventory);
 			}
 		}
 	}
@@ -101,4 +110,27 @@ bool AHorrorPlayerController::ShouldUseTouchControls() const
 {
 	// are we on a mobile platform? Should we force touch?
 	return SVirtualJoystick::ShouldDisplayTouchInterface() || bForceTouchControls;
+}
+
+void AHorrorPlayerController::ToggleInventory(bool bOpen)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Inventory toggled to %d"), bOpen)
+	bEnableClickEvents = bOpen;
+	bShowMouseCursor = bOpen;
+
+	if (bOpen)
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+		{
+			Subsystem->ClearAllMappings();
+			for (UInputMappingContext* CurrentContext : InspectMappingContexts)
+			{
+				Subsystem->AddMappingContext(CurrentContext, 0);
+			}
+		}
+	}
+	else
+	{
+		SetupInputComponent();
+	}
 }

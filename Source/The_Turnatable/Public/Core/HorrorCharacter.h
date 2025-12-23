@@ -42,6 +42,10 @@ protected:
 	/** Interact input action */
 	UPROPERTY(EditAnywhere, Category ="Input")
 	UInputAction* InteractAction;
+
+	/** Interact input action */
+	UPROPERTY(EditAnywhere, Category ="Input")
+	UInputAction* InventoryAction;
 	
 	/** If true, we're sprinting */
 	bool bSprinting = false;

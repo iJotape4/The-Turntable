@@ -23,4 +23,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Inventory", meta = (DisplayName = "Add Item"))
 	void BP_AddItem(UTTItem* Item);
+	UFUNCTION()
+	void ToggleInventory(bool bOpen);
 };
