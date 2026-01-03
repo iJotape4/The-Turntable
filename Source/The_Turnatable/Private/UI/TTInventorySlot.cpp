@@ -3,7 +3,16 @@
 
 #include "UI/TTInventorySlot.h"
 
+#include "Core/Inventory/TTItem.h"
+
 void UTTInventorySlot::Onclick()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Clicked"));
+	if (Item)
+	{
+		UE_LOG(LogTemp, Warning, TEXT ("Item: %s"), *Item->ItemName.ToString());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT ("No Item"));
+	}
 }
