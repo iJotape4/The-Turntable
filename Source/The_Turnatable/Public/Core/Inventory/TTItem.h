@@ -12,7 +12,7 @@
 UCLASS()
 class THE_TURNATABLE_API UTTItem : public UDataAsset
 {
-	GENERATED_BODY()
+	GENERATED_BODY()	
 
 public:
 	// The display name of the item
@@ -26,4 +26,7 @@ public:
 	// The icon representing the item in the inventory
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Item")
 	UTexture2D* ItemIcon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Item")
+	UStaticMesh* ItemMesh;
 };
