@@ -3,6 +3,7 @@
 
 #include "LevelGeometry/TTInspectItem.h"
 
+#include "Components/PointLightComponent.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "UI/TTInspectWidget.h"
 
@@ -18,9 +19,15 @@ ATTInspectItem::ATTInspectItem()
 	SceneCaptureComponent2D->SetupAttachment(SceneComponent);
 	SceneCaptureComponent2D->SetRelativeLocation(FVector(-100.0f, 0.0f, 0.0f));
 	SceneCaptureComponent2D->FOVAngle = 50.0f;
+	SceneCaptureComponent2D->ShowFlags.Atmosphere = false;
+	SceneCaptureComponent2D->bConsiderUnrenderedOpaquePixelAsFullyTranslucent = true;
 	
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	StaticMeshComponent->SetupAttachment(SceneComponent);
+
+	PointLightComponent = CreateDefaultSubobject<UPointLightComponent>(TEXT("PointLightComponent"));
+	PointLightComponent->SetupAttachment(RootComponent);
+	PointLightComponent->SetRelativeLocation(FVector(-100.0f, 0.0f, 0.0f));
 }
 
 // Called when the game starts or when spawned

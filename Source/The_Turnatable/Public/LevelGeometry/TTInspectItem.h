@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "TTInspectItem.generated.h"
 
+class UPointLightComponent;
+
 UCLASS()
 class THE_TURNATABLE_API ATTInspectItem : public AActor
 {
@@ -20,6 +22,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
 	UStaticMeshComponent* StaticMeshComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
+	UPointLightComponent* PointLightComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
 	TSubclassOf<class UTTInspectWidget> InspectWidgetClass;
