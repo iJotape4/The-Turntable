@@ -40,6 +40,6 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	
 	void InspectItem(UStaticMesh* Mesh, const FText& ItemName, const FText& ItemDescription = FText::GetEmpty());
 };

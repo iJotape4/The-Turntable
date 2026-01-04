@@ -49,6 +49,7 @@ void ATTInspectItem::InspectItem(UStaticMesh* Mesh, const FText& ItemName, const
 	
 	StaticMeshComponent->SetStaticMesh(Mesh);
 	
-	UUserWidget* InspectWidget = CreateWidget<UUserWidget>(GetWorld(), InspectWidgetClass);
+	UTTInspectWidget* InspectWidget = Cast<UTTInspectWidget>(CreateWidget<UUserWidget>(GetWorld(), InspectWidgetClass));
+	InspectWidget->OnInspect(ItemName, ItemDescription);
 	InspectWidget->AddToViewport();
 }
