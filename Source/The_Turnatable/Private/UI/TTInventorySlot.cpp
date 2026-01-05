@@ -2,7 +2,7 @@
 
 
 #include "UI/TTInventorySlot.h"
-
+#include "Core/Inventory/TTInventoryComponent.h"
 #include "Core/Inventory/TTItem.h"
 #include "LevelGeometry/TTInspectItem.h"
 
@@ -11,11 +11,34 @@ void UTTInventorySlot::Onclick()
 	if (Item)
 	{
 		UE_LOG(LogTemp, Warning, TEXT ("Item: %s"), *Item->ItemName.ToString());
-		ATTInspectItem* InspectItem = GetWorld()->SpawnActor<ATTInspectItem>(InspectItemClass);
-		InspectItem->InspectItem(Item->ItemMesh,Item->ItemName);
+		InventoryComponent->InspectItemActor->InspectItem(Item->ItemMesh,Item->ItemName);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT ("No Item"));
+	}
+}
+
+void UTTInventorySlot::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	APawn* OwningPawn = GetOwningPlayerPawn();
+	if (!OwningPawn && GetWorld())
+	{
+		OwningPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+	}
+
+	if (OwningPawn)
+	{
+		InventoryComponent = OwningPawn->FindComponentByClass<UTTInventoryComponent>();
+		if (!InventoryComponent)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("InventoryComponent not found on pawn %s"), *OwningPawn->GetName());
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OwningPawn not found in UTTInventorySlot::NativeConstruct"));
 	}
 }

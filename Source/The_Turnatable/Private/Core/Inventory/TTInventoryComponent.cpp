@@ -2,11 +2,11 @@
 
 
 #include "TTInventoryComponent.h"
-
-#include "Core/HorrorCharacter.h"
+#include "InputActionValue.h"
 #include "Core/TTInteractionComponent.h"
-#include "Core/Inventory/TTItem.h"
+#include "LevelGeometry/TTInspectItem.h"
 
+struct FInputActionValue;
 
 // Sets default values for this component's properties
 UTTInventoryComponent::UTTInventoryComponent()
@@ -30,6 +30,12 @@ void UTTInventoryComponent::PostInitProperties()
 	}
 }
 
+void UTTInventoryComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	InspectItemActor = GetWorld()->SpawnActor<ATTInspectItem>(InspectItemClass);
+}
+
 void UTTInventoryComponent::AddItem(UTTItem* NewItem)
 {
 	Inventory.Add(NewItem);
@@ -49,4 +55,9 @@ void UTTInventoryComponent::ToggleInventory()
 {
 	bInventoryOpen = !bInventoryOpen;
 	OnInventoryToggleDelegate.Broadcast(bInventoryOpen);
+}
+
+void UTTInventoryComponent::RotateItem(const FInputActionValue& Value)
+{
+	InspectItemActor->RotateItem(Value.Get<FVector2D>()*3.0f);
 }

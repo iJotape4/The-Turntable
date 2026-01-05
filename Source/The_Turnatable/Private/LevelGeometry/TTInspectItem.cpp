@@ -5,6 +5,7 @@
 
 #include "Components/PointLightComponent.h"
 #include "Components/SceneCaptureComponent2D.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "UI/TTInspectWidget.h"
 
 
@@ -48,8 +49,19 @@ void ATTInspectItem::InspectItem(UStaticMesh* Mesh, const FText& ItemName, const
 	if (!InspectWidgetClass) return;
 	
 	StaticMeshComponent->SetStaticMesh(Mesh);
-	
-	UTTInspectWidget* InspectWidget = Cast<UTTInspectWidget>(CreateWidget<UUserWidget>(GetWorld(), InspectWidgetClass));
+	if (!InspectWidget)
+	{
+		InspectWidget = Cast<UTTInspectWidget>(CreateWidget<UUserWidget>(GetWorld(), InspectWidgetClass));
+	}
 	InspectWidget->OnInspect(ItemName, ItemDescription);
 	InspectWidget->AddToViewport();
+}
+
+void ATTInspectItem::RotateItem(const FVector2D LookAxisVector) const
+{
+	UE_LOG(LogTemp, Warning, TEXT ("Rotate Item"));
+	UE_LOG(LogTemp, Warning, TEXT ("Look Axis: %s"), *LookAxisVector.ToString());
+	FRotator NewRotation = UKismetMathLibrary::ComposeRotators(StaticMeshComponent->GetComponentRotation(),
+		FRotator(LookAxisVector.Y, LookAxisVector.X, 0.0f));
+	StaticMeshComponent->SetWorldRotation(NewRotation);
 }

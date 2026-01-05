@@ -29,6 +29,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
 	TSubclassOf<class UTTInspectWidget> InspectWidgetClass;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Config")
+	UTTInspectWidget* InspectWidget;
+	
 	// Sets default values for this actor's properties
 	ATTInspectItem();
 	
@@ -42,4 +45,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	void InspectItem(UStaticMesh* Mesh, const FText& ItemName, const FText& ItemDescription = FText::GetEmpty());
+	void RotateItem(const FVector2D LookAxisVector) const;
 };

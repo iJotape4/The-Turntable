@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "TTInventorySlot.generated.h"
 
+class UTTInventoryComponent;
 class ATTInspectItem;
 class UTTItem;
 /**
@@ -16,14 +17,15 @@ class THE_TURNATABLE_API UTTInventorySlot : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
-	TSubclassOf<class  ATTInspectItem> InspectItemClass;
-	
 	UFUNCTION(BlueprintCallable)
 	void Onclick();
+	void NativeConstruct() override;
 	
 protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Data")
 	UTTItem* Item;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	UTTInventoryComponent* InventoryComponent;
+
 };
