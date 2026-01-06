@@ -55,12 +55,19 @@ void ATTInspectItem::InspectItem(UStaticMesh* Mesh, const FText& ItemName, const
 	}
 	InspectWidget->OnInspect(ItemName, ItemDescription);
 	InspectWidget->AddToViewport();
+	bIsInspecting = true;
+}
+
+void ATTInspectItem::CloseInspectWidget()
+{
+	if (!InspectWidget) return;
+	
+	InspectWidget->RemoveFromParent();
+	bIsInspecting = false;
 }
 
 void ATTInspectItem::RotateItem(const FVector2D LookAxisVector) const
 {
-	UE_LOG(LogTemp, Warning, TEXT ("Rotate Item"));
-	UE_LOG(LogTemp, Warning, TEXT ("Look Axis: %s"), *LookAxisVector.ToString());
 	FRotator NewRotation = UKismetMathLibrary::ComposeRotators(StaticMeshComponent->GetComponentRotation(),
 		FRotator(LookAxisVector.Y, LookAxisVector.X, 0.0f));
 	StaticMeshComponent->SetWorldRotation(NewRotation);

@@ -50,6 +50,10 @@ protected:
 	/** Inventory input action */
 	UPROPERTY(EditAnywhere, Category ="Input | Inventory")
 	UInputAction* RotateInspectedItemAction;
+
+	/** Inventory input action */
+	UPROPERTY(EditAnywhere, Category ="Input | Inventory")
+	UInputAction* CloseInspectingViewAction;
 	
 	/** If true, we're sprinting */
 	bool bSprinting = false;

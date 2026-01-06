@@ -53,11 +53,24 @@ bool UTTInventoryComponent::HasItem(UTTItem* ItemToCheck)
 
 void UTTInventoryComponent::ToggleInventory()
 {
-	bInventoryOpen = !bInventoryOpen;
-	OnInventoryToggleDelegate.Broadcast(bInventoryOpen);
+	if (!InspectItemActor) return;
+	if (InspectItemActor->IsInspecting())
+	{
+		CloseInspectView();
+	}
+	else
+	{
+		bInventoryOpen = !bInventoryOpen;
+		OnInventoryToggleDelegate.Broadcast(bInventoryOpen);
+	}
 }
 
 void UTTInventoryComponent::RotateItem(const FInputActionValue& Value)
 {
 	InspectItemActor->RotateItem(Value.Get<FVector2D>()*3.0f);
+}
+
+void UTTInventoryComponent::CloseInspectView()
+{
+	InspectItemActor->CloseInspectWidget();
 }

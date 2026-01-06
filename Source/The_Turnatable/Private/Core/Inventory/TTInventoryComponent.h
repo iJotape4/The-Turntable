@@ -47,4 +47,5 @@ public:
 	void ToggleInventory();
 
 	void RotateItem(const FInputActionValue& Value);
+	void CloseInspectView();
 };
