@@ -28,7 +28,7 @@ protected:
 	TArray<UTTItem*> Inventory;
 	// Sets default values for this component's properties
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory")
-	bool bInventoryOpen;
+	bool bInventoryOpen =false;
 
 public:
 	UTTInventoryComponent();

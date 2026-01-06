@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "TTInventoryUI.generated.h"
 
+class UTTBackKeyWidget;
+class UTTInventoryComponent;
 class UTTItem;
 class AHorrorCharacter;
 /**
@@ -16,6 +18,7 @@ class THE_TURNATABLE_API UTTInventoryUI : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+	virtual void NativeConstruct() override;
 	void SetUpInventoryComponent(AHorrorCharacter* HorrorCharacter);
 
 	UFUNCTION()
@@ -25,4 +28,14 @@ public:
 	void BP_AddItem(UTTItem* Item);
 	UFUNCTION()
 	void ToggleInventory(bool bOpen);
+	
+protected:
+	UTTInventoryComponent* InventoryComponent;
+	UTTBackKeyWidget* BackKeyWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
+	FName BackKeyWidgetName = "BackKeyWidget";
+
+	UFUNCTION()
+	void CloseInventory();
 };

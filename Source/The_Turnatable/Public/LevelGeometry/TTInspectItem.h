@@ -34,19 +34,17 @@ public:
 	
 	// Sets default values for this actor's properties
 	ATTInspectItem();
-
+	
+	void InspectItem(UStaticMesh* Mesh, const FText& ItemName, const FText& ItemDescription = FText::GetEmpty());
+	
 	bool IsInspecting() const { return bIsInspecting; }
-
+	
+	void RotateItem(const FVector2D LookAxisVector) const;
+	
+	UFUNCTION()
+	void CloseInspectWidget();
+	
 protected:
 	bool bIsInspecting =false;
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-	
-	void InspectItem(UStaticMesh* Mesh, const FText& ItemName, const FText& ItemDescription = FText::GetEmpty());
-	void CloseInspectWidget();
-	void RotateItem(const FVector2D LookAxisVector) const;
 };

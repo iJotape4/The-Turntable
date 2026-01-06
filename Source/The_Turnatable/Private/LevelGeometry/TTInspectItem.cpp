@@ -31,19 +31,6 @@ ATTInspectItem::ATTInspectItem()
 	PointLightComponent->SetRelativeLocation(FVector(-100.0f, 0.0f, 0.0f));
 }
 
-// Called when the game starts or when spawned
-void ATTInspectItem::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ATTInspectItem::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 void ATTInspectItem::InspectItem(UStaticMesh* Mesh, const FText& ItemName, const FText& ItemDescription)
 {
 	if (!InspectWidgetClass) return;
@@ -56,14 +43,7 @@ void ATTInspectItem::InspectItem(UStaticMesh* Mesh, const FText& ItemName, const
 	InspectWidget->OnInspect(ItemName, ItemDescription);
 	InspectWidget->AddToViewport();
 	bIsInspecting = true;
-}
-
-void ATTInspectItem::CloseInspectWidget()
-{
-	if (!InspectWidget) return;
-	
-	InspectWidget->RemoveFromParent();
-	bIsInspecting = false;
+	InspectWidget->OnCloseByBackKeyDelegate.AddDynamic(this, &ATTInspectItem::CloseInspectWidget);
 }
 
 void ATTInspectItem::RotateItem(const FVector2D LookAxisVector) const
@@ -71,4 +51,13 @@ void ATTInspectItem::RotateItem(const FVector2D LookAxisVector) const
 	FRotator NewRotation = UKismetMathLibrary::ComposeRotators(StaticMeshComponent->GetComponentRotation(),
 		FRotator(LookAxisVector.Y, LookAxisVector.X, 0.0f));
 	StaticMeshComponent->SetWorldRotation(NewRotation);
+}
+
+void ATTInspectItem::CloseInspectWidget()
+{
+	if (!InspectWidget) return;
+	
+	InspectWidget->OnCloseByBackKeyDelegate.RemoveDynamic(this, &ATTInspectItem::CloseInspectWidget);
+	InspectWidget->RemoveFromParent();
+	bIsInspecting = false;
 }
