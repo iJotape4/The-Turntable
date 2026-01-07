@@ -29,4 +29,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Item")
 	UStaticMesh* ItemMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item", Transient)
+	FRotator ItemRotation = FRotator::ZeroRotator;
 };

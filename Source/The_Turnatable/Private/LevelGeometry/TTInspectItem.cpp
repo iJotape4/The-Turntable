@@ -5,9 +5,9 @@
 
 #include "Components/PointLightComponent.h"
 #include "Components/SceneCaptureComponent2D.h"
+#include "Core/Inventory/TTItem.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "UI/TTInspectWidget.h"
-
 
 // Sets default values
 ATTInspectItem::ATTInspectItem()
@@ -31,20 +31,24 @@ ATTInspectItem::ATTInspectItem()
 	PointLightComponent->SetRelativeLocation(FVector(-100.0f, 0.0f, 0.0f));
 }
 
-void ATTInspectItem::InspectItem(UStaticMesh* Mesh, const FText& ItemName, const FText& ItemDescription)
+void ATTInspectItem::InspectItem(UTTItem* Item)
 {
 	if (!InspectWidgetClass) return;
 	
-	StaticMeshComponent->SetStaticMesh(Mesh);
+	StaticMeshComponent->SetStaticMesh(Item->ItemMesh);
 	if (!InspectWidget)
 	{
 		InspectWidget = Cast<UTTInspectWidget>(CreateWidget<UUserWidget>(GetWorld(), InspectWidgetClass));
 	}
-	InspectWidget->OnInspect(ItemName, ItemDescription);
+	LastInspectedItem = Item;
+	InspectWidget->OnInspect(Item->ItemName, Item->ItemDescription);
 	InspectWidget->AddToViewport();
 	bIsInspecting = true;
+	StaticMeshComponent->SetWorldRotation(Item->ItemRotation);
+	UE_LOG(LogTemp, Warning, TEXT("Rotation: %s"), *Item->ItemRotation.ToString());
 	InspectWidget->OnCloseByBackKeyDelegate.AddDynamic(this, &ATTInspectItem::CloseInspectWidget);
 }
+
 
 void ATTInspectItem::RotateItem(const FVector2D LookAxisVector) const
 {
@@ -56,7 +60,7 @@ void ATTInspectItem::RotateItem(const FVector2D LookAxisVector) const
 void ATTInspectItem::CloseInspectWidget()
 {
 	if (!InspectWidget) return;
-	
+	LastInspectedItem->ItemRotation = StaticMeshComponent->GetComponentRotation();
 	InspectWidget->OnCloseByBackKeyDelegate.RemoveDynamic(this, &ATTInspectItem::CloseInspectWidget);
 	InspectWidget->RemoveFromParent();
 	bIsInspecting = false;

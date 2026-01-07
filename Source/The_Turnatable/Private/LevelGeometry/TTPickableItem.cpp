@@ -30,7 +30,7 @@ bool ATTPickableItem::Interact_Implementation(APawn* InstigatorPawn)
 {
 	if (!Super::Interact_Implementation(InstigatorPawn)) return false;
 
-	if (ensureAlwaysMsgf(Item, TEXT("Item Data asset is not set on: %s"), *GetActorLabel()))
+	if (ensureAlwaysMsgf(Item, TEXT("Item Data asset is not set on: %s"), *GetName()))
 	{
 		if (UTTInteractionComponent* InteractionComponent = InstigatorPawn->GetComponentByClass<UTTInteractionComponent>())
 		{

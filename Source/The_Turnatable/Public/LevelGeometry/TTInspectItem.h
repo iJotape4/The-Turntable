@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "TTInspectItem.generated.h"
 
+class UTTItem;
 class UPointLightComponent;
 
 UCLASS()
@@ -31,11 +32,14 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Config")
 	UTTInspectWidget* InspectWidget;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Config")
+	UTTItem* LastInspectedItem;
 	
 	// Sets default values for this actor's properties
 	ATTInspectItem();
 	
-	void InspectItem(UStaticMesh* Mesh, const FText& ItemName, const FText& ItemDescription = FText::GetEmpty());
+	void InspectItem(UTTItem* Item);
 	
 	bool IsInspecting() const { return bIsInspecting; }
 	

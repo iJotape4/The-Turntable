@@ -11,7 +11,7 @@ void UTTInventorySlot::Onclick()
 	if (Item)
 	{
 		UE_LOG(LogTemp, Warning, TEXT ("Item: %s"), *Item->ItemName.ToString());
-		InventoryComponent->InspectItemActor->InspectItem(Item->ItemMesh,Item->ItemName);
+		InventoryComponent->InspectItemActor->InspectItem(Item);
 	}
 	else
 	{
