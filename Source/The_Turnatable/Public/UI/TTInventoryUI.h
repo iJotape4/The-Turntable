@@ -29,14 +29,18 @@ public:
 	UFUNCTION()
 	void OnAddItem(UTTItem* Item);
 
-	UFUNCTION()
-	void OnRemoveItem(UTTItem* Item);
-
 	UFUNCTION(BlueprintImplementableEvent, Category="Inventory", meta = (DisplayName = "Add Item"))
 	void BP_AddItem(UTTItem* Item);
 
-	UFUNCTION(BlueprintImplementableEvent, Category="Inventory", meta = (DisplayName = "Add Item"))
-	void BP_RemoveItem(UTTItem* Item);
+	UFUNCTION()
+	UTTInventorySlot* GetInventorySlotByItem(UTTItem* Item);
+	
+	UFUNCTION()
+	// void OnRemoveItem(UTTItem* Item);
+	void OnRemoveItem(UTTInventorySlot* InventorySlot);
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Inventory", meta = (DisplayName = "Remove Item"))
+	void BP_RemoveItem(UTTInventorySlot* InventorySlot);
 	UFUNCTION()
 	void ToggleInventory(bool bOpen);
 	

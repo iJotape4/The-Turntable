@@ -47,6 +47,7 @@ void UTTInventoryUI::SetUpInventoryComponent(AHorrorCharacter* HorrorCharacter)
 	if (InventoryComponent)
 	{
 		InventoryComponent->OnInventoryToggleDelegate.AddDynamic(this, &UTTInventoryUI::ToggleInventory);
+		InventoryComponent->OnSlotClickedDelegate.AddDynamic(this, &UTTInventoryUI::OnRemoveItem);
 	}
 }
 
@@ -55,9 +56,28 @@ void UTTInventoryUI::OnAddItem(UTTItem* Item)
 	BP_AddItem(Item);
 }
 
-void UTTInventoryUI::OnRemoveItem(UTTItem* Item)
+UTTInventorySlot* UTTInventoryUI::GetInventorySlotByItem(UTTItem* Item)
 {
-	BP_RemoveItem(Item);
+	for (auto InventorySlot : InventorySlots)
+	{
+		if (InventorySlot->GetItem() == Item)
+		{
+			return InventorySlot;
+		}
+	}
+
+	UE_LOG(LogTemp, Fatal, TEXT("Item not found in InventorySlots"));
+	return nullptr;
+}
+
+// void UTTInventoryUI::OnRemoveItem(UTTItem* Item)
+// {
+// 	BP_RemoveItem(GetInventorySlotByItem(Item));
+// }
+
+void UTTInventoryUI::OnRemoveItem(UTTInventorySlot* InventorySlot)
+{
+	BP_RemoveItem(InventorySlot);
 }
 
 void UTTInventoryUI::ToggleInventory(bool bOpen)

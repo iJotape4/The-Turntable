@@ -5,6 +5,7 @@
 #include "InputActionValue.h"
 #include "Core/TTInteractionComponent.h"
 #include "LevelGeometry/TTInspectItem.h"
+#include "UI/TTInventorySlot.h"
 
 struct FInputActionValue;
 
@@ -25,6 +26,7 @@ void UTTInventoryComponent::PostInitProperties()
 		{
 			InteractionComponent->OnInteractDelegate.AddDynamic(this, &UTTInventoryComponent::AddItem);
 		}
+		this->OnSlotClickedDelegate.AddDynamic(this, &UTTInventoryComponent::RemoveItem);
 	}
 }
 
@@ -42,6 +44,11 @@ void UTTInventoryComponent::AddItem(UTTItem* NewItem)
 void UTTInventoryComponent::RemoveItem(UTTItem* ItemToRemove)
 {
 	Inventory.Remove(ItemToRemove);
+}
+
+void UTTInventoryComponent::RemoveItem(UTTInventorySlot* Slot)
+{
+	Inventory.Remove(Slot->GetItem());
 }
 
 bool UTTInventoryComponent::HasItem(UTTItem* ItemToCheck)

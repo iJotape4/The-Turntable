@@ -20,6 +20,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Onclick();
 	void NativeConstruct() override;
+	UTTItem* GetItem() const;
 	
 protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Data")

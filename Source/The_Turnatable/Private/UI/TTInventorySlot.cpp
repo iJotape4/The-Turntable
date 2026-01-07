@@ -12,6 +12,7 @@ void UTTInventorySlot::Onclick()
 	{
 		UE_LOG(LogTemp, Warning, TEXT ("Item: %s"), *Item->ItemName.ToString());
 		InventoryComponent->InspectItemActor->InspectItem(Item);
+		//InventoryComponent->OnSlotClickedDelegate.Broadcast(this);
 	}
 	else
 	{
@@ -41,4 +42,9 @@ void UTTInventorySlot::NativeConstruct()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("OwningPawn not found in UTTInventorySlot::NativeConstruct"));
 	}
+}
+
+UTTItem* UTTInventorySlot::GetItem() const
+{
+	return Item;
 }
