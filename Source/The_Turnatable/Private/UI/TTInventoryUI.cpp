@@ -3,18 +3,36 @@
 
 #include "UI/TTInventoryUI.h"
 
+#include "Components/PanelWidget.h"
 #include "Core/HorrorCharacter.h"
 #include "Core/TTInteractionComponent.h"
 #include "Core/Inventory/TTInventoryComponent.h"
 #include "UI/TTBackKeyWidget.h"
+#include "UI/TTInventorySlot.h"
 
 void UTTInventoryUI::NativeConstruct()
 {
 	Super::NativeConstruct();
+	UE_LOG(LogTemp, Warning, TEXT("Constructed Inventory UI with BackKeyWidgetName: %s"), *BackKeyWidgetName.ToString());
 	BackKeyWidget = Cast<UTTBackKeyWidget>(GetWidgetFromName(BackKeyWidgetName));
 	if (BackKeyWidget)
 	{
 		BackKeyWidget->OnBackKeyPressedDelegate.AddDynamic(this, &UTTInventoryUI::CloseInventory);
+	}
+	
+}
+
+void UTTInventoryUI::SetSlotsArray(UPanelWidget* InParentContainer)
+{
+	TArray<UWidget*> Widgets = InParentContainer->GetAllChildren();
+	
+	InventorySlots.Empty();
+	for (UWidget* Widget : Widgets)
+	{
+		if (UTTInventorySlot* InventorySlot = Cast<UTTInventorySlot>(Widget))
+		{
+			InventorySlots.AddUnique(InventorySlot);
+		}
 	}
 }
 
@@ -35,6 +53,11 @@ void UTTInventoryUI::SetUpInventoryComponent(AHorrorCharacter* HorrorCharacter)
 void UTTInventoryUI::OnAddItem(UTTItem* Item)
 {
 	BP_AddItem(Item);
+}
+
+void UTTInventoryUI::OnRemoveItem(UTTItem* Item)
+{
+	BP_RemoveItem(Item);
 }
 
 void UTTInventoryUI::ToggleInventory(bool bOpen)
