@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TTInventoryComponent.h"
+#include "Core/Inventory/TTInventoryComponent.h"
 #include "InputActionValue.h"
 #include "Core/TTInteractionComponent.h"
 #include "LevelGeometry/TTInspectItem.h"

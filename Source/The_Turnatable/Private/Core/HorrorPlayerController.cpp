@@ -9,7 +9,7 @@
 #include "Core/HorrorCharacter.h"
 #include "UI/HorrorUI.h"
 #include "The_Turnatable.h"
-#include "Inventory/TTInventoryComponent.h"
+#include "Core/Inventory/TTInventoryComponent.h"
 #include "UI/TTInventoryUI.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 

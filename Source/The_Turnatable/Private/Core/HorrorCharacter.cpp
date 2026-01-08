@@ -10,7 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
 #include "Core/TTInteractionComponent.h"
-#include "Inventory/TTInventoryComponent.h"
+#include "Core/Inventory/TTInventoryComponent.h"
 
 AHorrorCharacter::AHorrorCharacter()
 {
