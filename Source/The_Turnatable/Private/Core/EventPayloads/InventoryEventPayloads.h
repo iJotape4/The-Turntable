@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "CoreMinimal.h"
 #include "Core/Inventory/TTItem.h"
-#include "ExampleEventPayloads.generated.h"
+#include "InventoryEventPayloads.generated.h"
 
 USTRUCT()
 struct FInventoryChangedEvent
@@ -20,16 +20,4 @@ struct FItemPickedEvent
 {
 	GENERATED_BODY()
 	UTTItem* Item;
-};
-
-USTRUCT()
-struct FQuestUpdatedEvent
-{
-	GENERATED_BODY()
-
-	UPROPERTY()
-	FName QuestId;
-
-	UPROPERTY()
-	int32 NewStage = 0;
 };

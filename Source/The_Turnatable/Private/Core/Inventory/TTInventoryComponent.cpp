@@ -4,7 +4,7 @@
 #include "Core/Inventory/TTInventoryComponent.h"
 #include "InputActionValue.h"
 #include "Core/EventRouterSubsystem.h"
-#include "Core/ExampleEventPayloads.h"
+#include "Core/EventPayloads/InventoryEventPayloads.h"
 #include "Core/TTInteractionComponent.h"
 #include "LevelGeometry/TTInspectItem.h"
 #include "GameplayTagsManager.h"

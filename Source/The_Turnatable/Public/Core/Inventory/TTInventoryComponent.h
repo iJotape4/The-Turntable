@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Core/ExampleEventPayloads.h"
+#include "Core/EventPayloads/InventoryEventPayloads.h"
 #include "TTInventoryComponent.generated.h"
 
 class UTTInventorySlot;
