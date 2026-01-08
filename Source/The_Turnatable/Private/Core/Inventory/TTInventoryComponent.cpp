@@ -3,8 +3,11 @@
 
 #include "Core/Inventory/TTInventoryComponent.h"
 #include "InputActionValue.h"
+#include "Core/EventRouterSubsystem.h"
+#include "Core/ExampleEventPayloads.h"
 #include "Core/TTInteractionComponent.h"
 #include "LevelGeometry/TTInspectItem.h"
+#include "GameplayTagsManager.h"
 #include "UI/TTInventorySlot.h"
 
 struct FInputActionValue;
@@ -34,6 +37,18 @@ void UTTInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	InspectItemActor = GetWorld()->SpawnActor<ATTInspectItem>(InspectItemClass);
+	
+	UEventRouterSubsystem* Router = GetWorld()->GetGameInstance()->GetSubsystem<UEventRouterSubsystem>();
+
+	const FGameplayTag TopicUI = FGameplayTag::RequestGameplayTag(TEXT("UI"));
+	const FGameplayTag TopicInventory = FGameplayTag::RequestGameplayTag(TEXT("UI.Inventory"));
+
+	// Subscribe to only inventory events:
+	InventoryHandle = Router->SubscribeTyped<FItemPickedEvent>(
+		TopicInventory,
+		this,
+		&UTTInventoryComponent::OnInventoryChanged
+	);
 }
 
 void UTTInventoryComponent::AddItem(UTTItem* NewItem)
@@ -78,4 +93,23 @@ void UTTInventoryComponent::RotateItem(const FInputActionValue& Value)
 void UTTInventoryComponent::CloseInspectView()
 {
 	InspectItemActor->CloseInspectWidget();
+}
+
+void UTTInventoryComponent::OnInventoryChanged(const FItemPickedEvent& Ev)
+{
+	UE_LOG(LogTemp, Warning, TEXT ("Inventory Changed"));
+	UE_LOG(LogTemp, Warning, TEXT ("Item: %s"), *Ev.Item->GetName());
+}
+
+void UTTInventoryComponent::BeginDestroy()
+{
+	if (UWorld* World = GetWorld())
+	{
+		if (UEventRouterSubsystem* Router = World->GetGameInstance()->GetSubsystem<UEventRouterSubsystem>())
+		{
+			const FGameplayTag TopicInventory = FGameplayTag::RequestGameplayTag(TEXT("UI.Inventory"));
+			Router->Unsubscribe(TopicInventory, InventoryHandle);
+		}
+	}
+	Super::BeginDestroy();
 }

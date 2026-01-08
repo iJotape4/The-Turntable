@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Core/ExampleEventPayloads.h"
 #include "TTInventoryComponent.generated.h"
 
 class UTTInventorySlot;
@@ -52,4 +53,11 @@ public:
 
 	void RotateItem(const FInputActionValue& Value);
 	void CloseInspectView();
+
+	void OnInventoryChanged(const FItemPickedEvent& Ev);
+
+	virtual void BeginDestroy() override;
+private:
+	FDelegateHandle InventoryHandle;
+
 };
