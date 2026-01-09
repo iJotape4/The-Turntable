@@ -66,7 +66,7 @@ void AHorrorPlayerController::OnPossess(APawn* aPawn)
 			{
 				InventoryUI = CreateWidget<UTTInventoryUI>(this, InventoryUIClass);
 				InventoryUI->SetVisibility(ESlateVisibility::Collapsed);
-				InventoryUI->AddToViewport(1);
+				InventoryUI->AddToViewport();
 				InventoryUI->SetUpInventoryComponent(HorrorCharacter);
 				UEventRouterSubsystem::UnsubscribeFromEvent(this, "UI.Inventory", InventoryToggleHandle);
 				InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, "UI.Inventory", &AHorrorPlayerController::ToggleInventory);

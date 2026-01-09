@@ -20,7 +20,6 @@ class THE_TURNATABLE_API UTTInventoryUI : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-	virtual void NativeOnInitialized() override;
 	virtual void NativeConstruct() override;
 	
 	UFUNCTION(BlueprintCallable)
