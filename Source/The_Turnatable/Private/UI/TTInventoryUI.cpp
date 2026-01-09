@@ -5,16 +5,18 @@
 
 #include "Components/PanelWidget.h"
 #include "Core/EventRouterSubsystem.h"
-#include "Core/HorrorCharacter.h"
 #include "Core/Inventory/TTInventoryComponent.h"
 #include "UI/TTBackKeyWidget.h"
 #include "UI/TTInventorySlot.h"
 
 void UTTInventoryUI::NativeConstruct()
 {
-	InventoryPickedUpItemHandle = UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(this, "UI.Inventory", &UTTInventoryUI::OnAddItem);
-	InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, "UI.Inventory", &UTTInventoryUI::ToggleInventory);
 	Super::NativeConstruct();
+	const FName UIEventsTag = FName("UI.Inventory");
+	InventoryPickedUpItemHandle = UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(this, UIEventsTag, &UTTInventoryUI::OnAddItem);
+	InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, UIEventsTag, &UTTInventoryUI::ToggleInventory);
+	InventorySlotSelectedHandle = UEventRouterSubsystem::SubscribeToEvent<FSlotSelectedEvent>(this,UIEventsTag,&UTTInventoryUI::OnRemoveItem);
+	
 	UE_LOG(LogTemp, Warning, TEXT("Constructed Inventory UI with BackKeyWidgetName: %s"), *BackKeyWidgetName.ToString());
 	BackKeyWidget = Cast<UTTBackKeyWidget>(GetWidgetFromName(BackKeyWidgetName));
 	if (BackKeyWidget)
@@ -35,15 +37,6 @@ void UTTInventoryUI::SetSlotsArray(UPanelWidget* InParentContainer)
 		{
 			InventorySlots.AddUnique(InventorySlot);
 		}
-	}
-}
-
-void UTTInventoryUI::SetUpInventoryComponent(AHorrorCharacter* HorrorCharacter)
-{
-	InventoryComponent = HorrorCharacter->GetComponentByClass<UTTInventoryComponent>();
-	if (InventoryComponent)
-	{
-		InventoryComponent->OnSlotClickedDelegate.AddDynamic(this, &UTTInventoryUI::OnRemoveItem);
 	}
 }
 
@@ -71,9 +64,9 @@ UTTInventorySlot* UTTInventoryUI::GetInventorySlotByItem(UTTItem* Item)
 // 	BP_RemoveItem(GetInventorySlotByItem(Item));
 // }
 
-void UTTInventoryUI::OnRemoveItem(UTTInventorySlot* InventorySlot)
+void UTTInventoryUI::OnRemoveItem(const FSlotSelectedEvent& Event)
 {
-	BP_RemoveItem(InventorySlot);
+	BP_RemoveItem(Event.InventorySlot);
 }
 
 void UTTInventoryUI::ToggleInventory(const FInventoryToggle& Event)

@@ -12,8 +12,6 @@ struct FInputActionValue;
 class ATTInspectItem;
 class UTTItem;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSlotClicked, UTTInventorySlot*, InventorySlot);
-
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class THE_TURNATABLE_API UTTInventoryComponent : public UActorComponent
 {
@@ -34,7 +32,6 @@ protected:
 
 public:
 	UTTInventoryComponent();
-	FOnSlotClicked OnSlotClickedDelegate;
 
 	virtual void PostInitProperties() override;
 
@@ -44,7 +41,7 @@ public:
 	void AddItem(UTTItem* NewItem);
 	UFUNCTION()
 	void RemoveItem(UTTItem* ItemToRemove);
-	void RemoveItem(UTTInventorySlot* Slot);
+	void RemoveItem(const FSlotSelectedEvent& Event);
 	
 	bool HasItem(UTTItem* ItemToCheck);
 	void ToggleInventory();
@@ -59,4 +56,5 @@ public:
 private:
 	FDelegateHandle InventoryPickedUpHandle;
 	FDelegateHandle InventoryToggleHandle;
+	FDelegateHandle InventorySlotSelectedHandle;
 };

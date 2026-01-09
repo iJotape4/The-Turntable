@@ -2,6 +2,8 @@
 
 
 #include "UI/TTInventorySlot.h"
+
+#include "Core/EventRouterSubsystem.h"
 #include "Core/Inventory/TTInventoryComponent.h"
 #include "Core/Inventory/TTItem.h"
 #include "LevelGeometry/TTInspectItem.h"
@@ -12,7 +14,7 @@ void UTTInventorySlot::Onclick()
 	{
 		UE_LOG(LogTemp, Warning, TEXT ("Item: %s"), *Item->ItemName.ToString());
 		InventoryComponent->InspectItemActor->InspectItem(Item);
-		//InventoryComponent->OnSlotClickedDelegate.Broadcast(this);
+		//UEventRouterSubsystem::BroadcastEvent(this, "UI.Inventory", FSlotSelectedEvent{this});
 	}
 	else
 	{

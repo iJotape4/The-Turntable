@@ -5,6 +5,7 @@
 #include "InputActionValue.h"
 #include "Core/EventRouterSubsystem.h"
 #include "Core/EventPayloads/InventoryEventPayloads.h"
+#include "Core/Inventory/TTItem.h"
 #include "LevelGeometry/TTInspectItem.h"
 #include "UI/TTInventorySlot.h"
 
@@ -21,24 +22,24 @@ UTTInventoryComponent::UTTInventoryComponent()
 void UTTInventoryComponent::PostInitProperties()
 {
 	Super::PostInitProperties();
-	if (AActor* Owner = GetOwner())
-	{
-		this->OnSlotClickedDelegate.AddDynamic(this, &UTTInventoryComponent::RemoveItem);
-	}
+	
 }
 
 void UTTInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	InspectItemActor = GetWorld()->SpawnActor<ATTInspectItem>(InspectItemClass);
-	
+
+	const FName UIEventsTag = FName("UI.Inventory");
 	InventoryPickedUpHandle = UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(
 		this, 
-		"UI.Inventory", 
+		UIEventsTag, 
 		&UTTInventoryComponent::OnInventoryChanged // Use '&' and the full class name
 	);
 
-	InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, "UI.Inventory", &UTTInventoryComponent::ToggleInventory);
+	InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, UIEventsTag, &UTTInventoryComponent::ToggleInventory);
+	InventorySlotSelectedHandle = UEventRouterSubsystem::SubscribeToEvent<FSlotSelectedEvent>(this,UIEventsTag,&UTTInventoryComponent::RemoveItem);
+
 }
 
 void UTTInventoryComponent::AddItem(UTTItem* NewItem)
@@ -46,14 +47,14 @@ void UTTInventoryComponent::AddItem(UTTItem* NewItem)
 	Inventory.Add(NewItem);
 }
 
+void UTTInventoryComponent::RemoveItem(const FSlotSelectedEvent& Event)
+{
+	Inventory.Remove(Event.InventorySlot->GetItem());
+}
+
 void UTTInventoryComponent::RemoveItem(UTTItem* ItemToRemove)
 {
 	Inventory.Remove(ItemToRemove);
-}
-
-void UTTInventoryComponent::RemoveItem(UTTInventorySlot* Slot)
-{
-	Inventory.Remove(Slot->GetItem());
 }
 
 bool UTTInventoryComponent::HasItem(UTTItem* ItemToCheck)

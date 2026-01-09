@@ -25,8 +25,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void SetSlotsArray(UPanelWidget* InParentContainer);
 	
-	void SetUpInventoryComponent(AHorrorCharacter* HorrorCharacter);
-	
 	UFUNCTION()
 	void OnAddItem(const FItemPickedEvent& Event);
 
@@ -38,7 +36,7 @@ public:
 	
 	UFUNCTION()
 	// void OnRemoveItem(UTTItem* Item);
-	void OnRemoveItem(UTTInventorySlot* InventorySlot);
+	void OnRemoveItem(const FSlotSelectedEvent& Event);
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Inventory", meta = (DisplayName = "Remove Item"))
 	void BP_RemoveItem(UTTInventorySlot* InventorySlot);
@@ -63,4 +61,5 @@ protected:
 private:
 	FDelegateHandle InventoryToggleHandle;
 	FDelegateHandle InventoryPickedUpItemHandle;
+	FDelegateHandle InventorySlotSelectedHandle;
 };
