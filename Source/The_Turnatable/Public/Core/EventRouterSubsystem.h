@@ -47,7 +47,7 @@ class THE_TURNATABLE_API UEventRouterSubsystem : public UGameInstanceSubsystem
 
 public:	
 	template <typename TPayloadStruct>
-	static bool SendEventMessage(UObject* Sender, const FName TopicName, const TPayloadStruct& Message)
+	static bool BroadcastEvent(UObject* Sender, const FName TopicName, const TPayloadStruct& Message)
 	{
 		if (!Sender) return false;
 
