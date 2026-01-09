@@ -33,17 +33,11 @@ bool ATTPickableItem::Interact_Implementation(APawn* InstigatorPawn)
 
 	if (ensureAlwaysMsgf(Item, TEXT("Item Data asset is not set on: %s"), *GetName()))
 	{
-		if (UTTInteractionComponent* InteractionComponent = InstigatorPawn->GetComponentByClass<UTTInteractionComponent>())
-		{
-			InteractionComponent->OnInteractDelegate.Broadcast(Item);
-
-			FItemPickedEvent Ev;
-			Ev.Item = Item;
-			UEventRouterSubsystem::SendEventMessage(this, "UI.Inventory", Ev);
-			
-			Destroy();
-			return true;
-		}
+		UEventRouterSubsystem::BroadcastEvent(this, "UI.Inventory", FItemPickedEvent{Item});
+		
+		Destroy();
+		return true;
+		
 	}
 	return false;
 }

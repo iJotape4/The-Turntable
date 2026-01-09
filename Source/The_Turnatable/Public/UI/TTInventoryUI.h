@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Core/EventPayloads/InventoryEventPayloads.h"
 #include "TTInventoryUI.generated.h"
 
 class UTTInventorySlot;
@@ -19,6 +20,7 @@ class THE_TURNATABLE_API UTTInventoryUI : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+	virtual void NativeOnInitialized() override;
 	virtual void NativeConstruct() override;
 	
 	UFUNCTION(BlueprintCallable)
@@ -27,7 +29,7 @@ public:
 	void SetUpInventoryComponent(AHorrorCharacter* HorrorCharacter);
 	
 	UFUNCTION()
-	void OnAddItem(UTTItem* Item);
+	void OnAddItem(const FItemPickedEvent& Event);
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Inventory", meta = (DisplayName = "Add Item"))
 	void BP_AddItem(UTTItem* Item);

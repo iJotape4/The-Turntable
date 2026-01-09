@@ -24,10 +24,6 @@ void UTTInventoryComponent::PostInitProperties()
 	Super::PostInitProperties();
 	if (AActor* Owner = GetOwner())
 	{
-		if (UTTInteractionComponent* InteractionComponent = Owner->FindComponentByClass<UTTInteractionComponent>())
-		{
-			InteractionComponent->OnInteractDelegate.AddDynamic(this, &UTTInventoryComponent::AddItem);
-		}
 		this->OnSlotClickedDelegate.AddDynamic(this, &UTTInventoryComponent::RemoveItem);
 	}
 }

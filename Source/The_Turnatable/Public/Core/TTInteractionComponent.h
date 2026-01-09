@@ -7,7 +7,6 @@
 #include "TTInteractionComponent.generated.h"
 
 class UTTItem;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteract, UTTItem*, Item);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class THE_TURNATABLE_API UTTInteractionComponent : public UActorComponent
@@ -15,7 +14,6 @@ class THE_TURNATABLE_API UTTInteractionComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	FOnInteract OnInteractDelegate;
 	void PrimaryInteract();
 	// Sets default values for this component's properties
 	UTTInteractionComponent();

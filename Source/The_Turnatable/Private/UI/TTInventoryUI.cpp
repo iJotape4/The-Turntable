@@ -4,11 +4,18 @@
 #include "UI/TTInventoryUI.h"
 
 #include "Components/PanelWidget.h"
+#include "Core/EventRouterSubsystem.h"
 #include "Core/HorrorCharacter.h"
 #include "Core/TTInteractionComponent.h"
 #include "Core/Inventory/TTInventoryComponent.h"
 #include "UI/TTBackKeyWidget.h"
 #include "UI/TTInventorySlot.h"
+
+void UTTInventoryUI::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(this, "UI.Inventory", &UTTInventoryUI::OnAddItem);
+}
 
 void UTTInventoryUI::NativeConstruct()
 {
@@ -19,6 +26,8 @@ void UTTInventoryUI::NativeConstruct()
 	{
 		BackKeyWidget->OnBackKeyPressedDelegate.AddDynamic(this, &UTTInventoryUI::CloseInventory);
 	}
+
+	
 	
 }
 
@@ -38,11 +47,6 @@ void UTTInventoryUI::SetSlotsArray(UPanelWidget* InParentContainer)
 
 void UTTInventoryUI::SetUpInventoryComponent(AHorrorCharacter* HorrorCharacter)
 {
-	if (UTTInteractionComponent* InteractionComponent = HorrorCharacter->GetComponentByClass<UTTInteractionComponent>())
-	{
-		InteractionComponent->OnInteractDelegate.AddDynamic(this, &UTTInventoryUI::OnAddItem);
-	}
-
 	InventoryComponent = HorrorCharacter->GetComponentByClass<UTTInventoryComponent>();
 	if (InventoryComponent)
 	{
@@ -51,9 +55,9 @@ void UTTInventoryUI::SetUpInventoryComponent(AHorrorCharacter* HorrorCharacter)
 	}
 }
 
-void UTTInventoryUI::OnAddItem(UTTItem* Item)
+void UTTInventoryUI::OnAddItem(const FItemPickedEvent& Event)
 {
-	BP_AddItem(Item);
+	BP_AddItem(Event.Item);
 }
 
 UTTInventorySlot* UTTInventoryUI::GetInventorySlotByItem(UTTItem* Item)
