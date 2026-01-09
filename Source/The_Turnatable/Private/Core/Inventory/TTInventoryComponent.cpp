@@ -7,7 +7,6 @@
 #include "Core/EventPayloads/InventoryEventPayloads.h"
 #include "Core/TTInteractionComponent.h"
 #include "LevelGeometry/TTInspectItem.h"
-#include "GameplayTagsManager.h"
 #include "UI/TTInventorySlot.h"
 
 struct FInputActionValue;
@@ -38,16 +37,10 @@ void UTTInventoryComponent::BeginPlay()
 	Super::BeginPlay();
 	InspectItemActor = GetWorld()->SpawnActor<ATTInspectItem>(InspectItemClass);
 	
-	UEventRouterSubsystem* Router = GetWorld()->GetGameInstance()->GetSubsystem<UEventRouterSubsystem>();
-
-	const FGameplayTag TopicUI = FGameplayTag::RequestGameplayTag(TEXT("UI"));
-	const FGameplayTag TopicInventory = FGameplayTag::RequestGameplayTag(TEXT("UI.Inventory"));
-
-	// Subscribe to only inventory events:
-	InventoryHandle = Router->SubscribeTyped<FItemPickedEvent>(
-		TopicInventory,
-		this,
-		&UTTInventoryComponent::OnInventoryChanged
+	UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(
+		this, 
+		"UI.Inventory", 
+		&UTTInventoryComponent::OnInventoryChanged // Use '&' and the full class name
 	);
 }
 
@@ -103,13 +96,6 @@ void UTTInventoryComponent::OnInventoryChanged(const FItemPickedEvent& Ev)
 
 void UTTInventoryComponent::BeginDestroy()
 {
-	if (UWorld* World = GetWorld())
-	{
-		if (UEventRouterSubsystem* Router = World->GetGameInstance()->GetSubsystem<UEventRouterSubsystem>())
-		{
-			const FGameplayTag TopicInventory = FGameplayTag::RequestGameplayTag(TEXT("UI.Inventory"));
-			Router->Unsubscribe(TopicInventory, InventoryHandle);
-		}
-	}
+	UEventRouterSubsystem::UnsubscribeFromEvent(this, "UI.Inventory", InventoryHandle);
 	Super::BeginDestroy();
 }

@@ -3,8 +3,9 @@
 
 #include "LevelGeometry/TTPickableItem.h"
 
+#include "Core/EventRouterSubsystem.h"
+#include "Core/EventPayloads/InventoryEventPayloads.h"
 #include "Core/TTInteractionComponent.h"
-
 
 // Sets default values
 ATTPickableItem::ATTPickableItem()
@@ -35,6 +36,11 @@ bool ATTPickableItem::Interact_Implementation(APawn* InstigatorPawn)
 		if (UTTInteractionComponent* InteractionComponent = InstigatorPawn->GetComponentByClass<UTTInteractionComponent>())
 		{
 			InteractionComponent->OnInteractDelegate.Broadcast(Item);
+
+			FItemPickedEvent Ev;
+			Ev.Item = Item;
+			UEventRouterSubsystem::SendEventMessage(this, "UI.Inventory", Ev);
+			
 			Destroy();
 			return true;
 		}

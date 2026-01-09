@@ -45,7 +45,72 @@ class THE_TURNATABLE_API UEventRouterSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
-public:
+public:	
+	template <typename TPayloadStruct>
+	static bool SendEventMessage(UObject* Sender, const FName TopicName, const TPayloadStruct& Message)
+	{
+		if (!Sender) return false;
+
+		UWorld* World = Sender->GetWorld();
+		if (!World) return false;
+
+		UEventRouterSubsystem* Router = GetEventRouterSubsystem(World);
+		if (!Router) return false;
+
+		const FGameplayTag Topic = FGameplayTag::RequestGameplayTag(TopicName, false);
+		if (!Topic.IsValid()) return false;
+
+		Router->PublishTyped<TPayloadStruct>(Topic, Sender, Message);
+		return true;
+	}
+
+	template <typename TPayloadStruct, typename TObject>
+	static FDelegateHandle SubscribeToEvent(TObject* Listener, const FName TopicName, void (TObject::*Method)(const TPayloadStruct&))
+	{
+		static_assert(TIsDerivedFrom<TObject, UObject>::IsDerived, "Listener must be a UObject type.");
+
+		if (!Listener || !Method) return FDelegateHandle();
+
+		UWorld* World = Listener->GetWorld();
+		if (!World) return FDelegateHandle();
+
+		UEventRouterSubsystem* Router = GetEventRouterSubsystem(World);
+		if (!Router) return FDelegateHandle();
+
+		const FGameplayTag Topic = FGameplayTag::RequestGameplayTag(TopicName, false);
+		if (!Topic.IsValid()) return FDelegateHandle();
+
+		return Router->SubscribeTyped<TPayloadStruct>(Topic, Listener, Method);
+	}
+
+	template <typename TObject>
+	static bool UnsubscribeFromEvent(TObject* Listener, const FName Topic, FDelegateHandle& Handle)
+	{
+		static_assert(TIsDerivedFrom<TObject, UObject>::IsDerived, "Listener must be a UObject type.");
+
+		if (!Listener) return false;
+		if (!Handle.IsValid()) return false;
+
+		UWorld* World = Listener->GetWorld();
+		if (!World) return false;
+
+		if (UEventRouterSubsystem* Router = GetEventRouterSubsystem(World))
+		{
+			const FGameplayTag Tag = FGameplayTag::RequestGameplayTag(Topic, false);
+			if (!Tag.IsValid()) return false;
+
+			Router->Unsubscribe(Tag, Handle);
+
+			// Opcional: invalida el handle para evitar doble-unsubscribe accidental
+			Handle.Reset();
+
+			return true;
+		}
+
+		return false;
+	}
+	
+protected:
 	// Subscribe with a raw delegate (lambda, static, etc.). Returns a handle you can store.
 	FDelegateHandle Subscribe(const FGameplayTag Topic, FOnEventMessage::FDelegate&& Delegate);
 
@@ -62,10 +127,12 @@ public:
 	// Convenience: publish a typed payload.
 	template <typename TPayloadStruct>
 	void PublishTyped(const FGameplayTag Topic, UObject* Sender, const TPayloadStruct& Payload);
-
+	
 private:
 	// Listeners keyed by the topic they subscribed to.
 	TMap<FGameplayTag, FOnEventMessage> TopicDelegates;
+	
+	static UEventRouterSubsystem* GetEventRouterSubsystem(UWorld* World);;
 };
 
 template <typename TPayloadStruct, typename TObject>

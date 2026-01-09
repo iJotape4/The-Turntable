@@ -50,3 +50,18 @@ void UEventRouterSubsystem::Publish(const FEventMessage& Message)
 		}
 	}
 }
+
+UEventRouterSubsystem* UEventRouterSubsystem::GetEventRouterSubsystem(UWorld* World)
+{
+	if (World == nullptr)
+	{
+		return nullptr;
+	}
+
+	if (UGameInstance* GI = World->GetGameInstance())
+	{
+		return GI->GetSubsystem<UEventRouterSubsystem>();
+	}
+	
+	return nullptr;
+}
