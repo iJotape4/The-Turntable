@@ -6,19 +6,14 @@
 #include "Components/PanelWidget.h"
 #include "Core/EventRouterSubsystem.h"
 #include "Core/HorrorCharacter.h"
-#include "Core/TTInteractionComponent.h"
 #include "Core/Inventory/TTInventoryComponent.h"
 #include "UI/TTBackKeyWidget.h"
 #include "UI/TTInventorySlot.h"
 
-void UTTInventoryUI::NativeOnInitialized()
-{
-	Super::NativeOnInitialized();
-	UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(this, "UI.Inventory", &UTTInventoryUI::OnAddItem);
-}
-
 void UTTInventoryUI::NativeConstruct()
 {
+	InventoryPickedUpItemHandle = UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(this, "UI.Inventory", &UTTInventoryUI::OnAddItem);
+	InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, "UI.Inventory", &UTTInventoryUI::ToggleInventory);
 	Super::NativeConstruct();
 	UE_LOG(LogTemp, Warning, TEXT("Constructed Inventory UI with BackKeyWidgetName: %s"), *BackKeyWidgetName.ToString());
 	BackKeyWidget = Cast<UTTBackKeyWidget>(GetWidgetFromName(BackKeyWidgetName));
@@ -26,8 +21,6 @@ void UTTInventoryUI::NativeConstruct()
 	{
 		BackKeyWidget->OnBackKeyPressedDelegate.AddDynamic(this, &UTTInventoryUI::CloseInventory);
 	}
-
-	
 	
 }
 
@@ -50,7 +43,6 @@ void UTTInventoryUI::SetUpInventoryComponent(AHorrorCharacter* HorrorCharacter)
 	InventoryComponent = HorrorCharacter->GetComponentByClass<UTTInventoryComponent>();
 	if (InventoryComponent)
 	{
-		InventoryComponent->OnInventoryToggleDelegate.AddDynamic(this, &UTTInventoryUI::ToggleInventory);
 		InventoryComponent->OnSlotClickedDelegate.AddDynamic(this, &UTTInventoryUI::OnRemoveItem);
 	}
 }
@@ -84,14 +76,25 @@ void UTTInventoryUI::OnRemoveItem(UTTInventorySlot* InventorySlot)
 	BP_RemoveItem(InventorySlot);
 }
 
-void UTTInventoryUI::ToggleInventory(bool bOpen)
+void UTTInventoryUI::ToggleInventory(const FInventoryToggle& Event)
 {
-	bOpen? AddToViewport() : RemoveFromParent();
+	Event.bOpen? SetVisibility(ESlateVisibility::Visible) : SetVisibility(ESlateVisibility::Collapsed);
 }
-
 
 void UTTInventoryUI::CloseInventory()
 {
 	if (!InventoryComponent) return;
-	InventoryComponent->OnInventoryToggleDelegate.Broadcast(false);
+	UEventRouterSubsystem::BroadcastEvent(this, "UI.Inventory", FInventoryToggle(false));
+}
+
+void UTTInventoryUI::NativeDestruct()
+{
+	UEventRouterSubsystem::UnsubscribeFromEvent(this, "UI.Inventory", InventoryPickedUpItemHandle);
+	UEventRouterSubsystem::UnsubscribeFromEvent(this, "UI.Inventory", InventoryToggleHandle);
+	
+	if (BackKeyWidget)
+	{
+		BackKeyWidget->OnBackKeyPressedDelegate.RemoveDynamic(this, &UTTInventoryUI::CloseInventory);
+	}
+	Super::NativeDestruct();
 }

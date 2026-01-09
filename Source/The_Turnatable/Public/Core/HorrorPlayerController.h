@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Core/EventPayloads/InventoryEventPayloads.h"
 #include "HorrorPlayerController.generated.h"
 
 class UTTInventoryUI;
@@ -78,5 +79,7 @@ protected:
 	bool ShouldUseTouchControls() const;
 
 	UFUNCTION()
-	void ToggleInventory(bool bOpen);
+	void ToggleInventory(const FInventoryToggle& Event);
+private:
+	FDelegateHandle InventoryToggleHandle;
 };

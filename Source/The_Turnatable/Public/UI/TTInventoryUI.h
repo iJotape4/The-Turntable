@@ -44,7 +44,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category="Inventory", meta = (DisplayName = "Remove Item"))
 	void BP_RemoveItem(UTTInventorySlot* InventorySlot);
 	UFUNCTION()
-	void ToggleInventory(bool bOpen);
+	void ToggleInventory(const FInventoryToggle& Event);
+
+	void NativeDestruct() override;
 	
 protected:
 	UTTInventoryComponent* InventoryComponent;
@@ -58,4 +60,8 @@ protected:
 
 	UFUNCTION()
 	void CloseInventory();
+
+private:
+	FDelegateHandle InventoryToggleHandle;
+	FDelegateHandle InventoryPickedUpItemHandle;
 };

@@ -21,3 +21,17 @@ struct FItemPickedEvent
 	GENERATED_BODY()
 	UTTItem* Item;
 };
+
+USTRUCT()
+struct FItemDroppedEvent
+{
+	GENERATED_BODY()
+	UTTItem* Item;
+};
+
+USTRUCT()
+struct FInventoryToggle
+{
+	GENERATED_BODY()
+	bool bOpen;
+};

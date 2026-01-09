@@ -9,6 +9,7 @@
 #include "Core/HorrorCharacter.h"
 #include "UI/HorrorUI.h"
 #include "The_Turnatable.h"
+#include "Core/EventRouterSubsystem.h"
 #include "Core/Inventory/TTInventoryComponent.h"
 #include "UI/TTInventoryUI.h"
 #include "Widgets/Input/SVirtualJoystick.h"
@@ -64,16 +65,11 @@ void AHorrorPlayerController::OnPossess(APawn* aPawn)
 			if (!InventoryUI)
 			{
 				InventoryUI = CreateWidget<UTTInventoryUI>(this, InventoryUIClass);
+				InventoryUI->SetVisibility(ESlateVisibility::Collapsed);
+				InventoryUI->AddToViewport(1);
 				InventoryUI->SetUpInventoryComponent(HorrorCharacter);
-			}
-
-			// Listen to delegates
-
-			if (UTTInventoryComponent* InventoryComponent = HorrorCharacter->GetComponentByClass<UTTInventoryComponent>())
-			{
-				InventoryComponent->OnInventoryToggleDelegate.AddDynamic(InventoryUI, &UTTInventoryUI::ToggleInventory);
-				InventoryComponent->OnInventoryToggleDelegate.RemoveDynamic(this, &AHorrorPlayerController::ToggleInventory);
-				InventoryComponent->OnInventoryToggleDelegate.AddDynamic(this, &AHorrorPlayerController::ToggleInventory);
+				UEventRouterSubsystem::UnsubscribeFromEvent(this, "UI.Inventory", InventoryToggleHandle);
+				InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, "UI.Inventory", &AHorrorPlayerController::ToggleInventory);
 			}
 		}
 	}
@@ -112,8 +108,9 @@ bool AHorrorPlayerController::ShouldUseTouchControls() const
 	return SVirtualJoystick::ShouldDisplayTouchInterface() || bForceTouchControls;
 }
 
-void AHorrorPlayerController::ToggleInventory(bool bOpen)
+void AHorrorPlayerController::ToggleInventory(const FInventoryToggle& Event)
 {
+	const bool bOpen = Event.bOpen;
 	UE_LOG(LogTemp, Warning, TEXT("Inventory toggled to %d"), bOpen)
 	bEnableClickEvents = bOpen;
 	bShowMouseCursor = bOpen;

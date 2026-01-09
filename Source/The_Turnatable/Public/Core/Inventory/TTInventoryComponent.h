@@ -12,7 +12,6 @@ struct FInputActionValue;
 class ATTInspectItem;
 class UTTItem;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInventoryToggle, bool, Open);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSlotClicked, UTTInventorySlot*, InventorySlot);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -35,7 +34,6 @@ protected:
 
 public:
 	UTTInventoryComponent();
-	FOnInventoryToggle OnInventoryToggleDelegate;
 	FOnSlotClicked OnSlotClickedDelegate;
 
 	virtual void PostInitProperties() override;
@@ -58,6 +56,5 @@ public:
 
 	virtual void BeginDestroy() override;
 private:
-	FDelegateHandle InventoryHandle;
-
+	FDelegateHandle InventoryPickedUpHandle;
 };

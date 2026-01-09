@@ -5,7 +5,6 @@
 #include "InputActionValue.h"
 #include "Core/EventRouterSubsystem.h"
 #include "Core/EventPayloads/InventoryEventPayloads.h"
-#include "Core/TTInteractionComponent.h"
 #include "LevelGeometry/TTInspectItem.h"
 #include "UI/TTInventorySlot.h"
 
@@ -33,7 +32,7 @@ void UTTInventoryComponent::BeginPlay()
 	Super::BeginPlay();
 	InspectItemActor = GetWorld()->SpawnActor<ATTInspectItem>(InspectItemClass);
 	
-	UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(
+	InventoryPickedUpHandle = UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(
 		this, 
 		"UI.Inventory", 
 		&UTTInventoryComponent::OnInventoryChanged // Use '&' and the full class name
@@ -70,7 +69,7 @@ void UTTInventoryComponent::ToggleInventory()
 	else
 	{
 		bInventoryOpen = !bInventoryOpen;
-		OnInventoryToggleDelegate.Broadcast(bInventoryOpen);
+		UEventRouterSubsystem::BroadcastEvent(this, "UI.Inventory", FInventoryToggle(bInventoryOpen));
 	}
 }
 
@@ -92,6 +91,6 @@ void UTTInventoryComponent::OnInventoryChanged(const FItemPickedEvent& Ev)
 
 void UTTInventoryComponent::BeginDestroy()
 {
-	UEventRouterSubsystem::UnsubscribeFromEvent(this, "UI.Inventory", InventoryHandle);
+	UEventRouterSubsystem::UnsubscribeFromEvent(this, "UI.Inventory", InventoryPickedUpHandle);
 	Super::BeginDestroy();
 }
