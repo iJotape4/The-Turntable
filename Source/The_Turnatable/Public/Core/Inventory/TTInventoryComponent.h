@@ -48,6 +48,7 @@ public:
 	
 	bool HasItem(UTTItem* ItemToCheck);
 	void ToggleInventory();
+	void ToggleInventory(const FInventoryToggle& Event);
 
 	void RotateItem(const FInputActionValue& Value);
 	void CloseInspectView();
@@ -57,4 +58,5 @@ public:
 	virtual void BeginDestroy() override;
 private:
 	FDelegateHandle InventoryPickedUpHandle;
+	FDelegateHandle InventoryToggleHandle;
 };

@@ -111,7 +111,6 @@ bool AHorrorPlayerController::ShouldUseTouchControls() const
 void AHorrorPlayerController::ToggleInventory(const FInventoryToggle& Event)
 {
 	const bool bOpen = Event.bOpen;
-	UE_LOG(LogTemp, Warning, TEXT("Inventory toggled to %d"), bOpen)
 	bEnableClickEvents = bOpen;
 	bShowMouseCursor = bOpen;
 

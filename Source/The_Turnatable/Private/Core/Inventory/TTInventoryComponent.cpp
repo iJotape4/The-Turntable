@@ -37,6 +37,8 @@ void UTTInventoryComponent::BeginPlay()
 		"UI.Inventory", 
 		&UTTInventoryComponent::OnInventoryChanged // Use '&' and the full class name
 	);
+
+	InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, "UI.Inventory", &UTTInventoryComponent::ToggleInventory);
 }
 
 void UTTInventoryComponent::AddItem(UTTItem* NewItem)
@@ -57,6 +59,11 @@ void UTTInventoryComponent::RemoveItem(UTTInventorySlot* Slot)
 bool UTTInventoryComponent::HasItem(UTTItem* ItemToCheck)
 {
 	return Inventory.Contains(ItemToCheck);
+}
+
+void UTTInventoryComponent::ToggleInventory(const FInventoryToggle& Event)
+{
+	bInventoryOpen = Event.bOpen;
 }
 
 void UTTInventoryComponent::ToggleInventory()

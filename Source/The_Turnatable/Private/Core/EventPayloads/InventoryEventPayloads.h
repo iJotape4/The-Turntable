@@ -33,5 +33,5 @@ USTRUCT()
 struct FInventoryToggle
 {
 	GENERATED_BODY()
-	bool bOpen;
+	bool bOpen = true;
 };

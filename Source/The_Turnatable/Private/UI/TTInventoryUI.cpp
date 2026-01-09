@@ -83,7 +83,6 @@ void UTTInventoryUI::ToggleInventory(const FInventoryToggle& Event)
 
 void UTTInventoryUI::CloseInventory()
 {
-	if (!InventoryComponent) return;
 	UEventRouterSubsystem::BroadcastEvent(this, "UI.Inventory", FInventoryToggle(false));
 }
 
