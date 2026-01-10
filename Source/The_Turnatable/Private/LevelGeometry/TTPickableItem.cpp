@@ -14,23 +14,11 @@ ATTPickableItem::ATTPickableItem()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
-void ATTPickableItem::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ATTPickableItem::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 bool ATTPickableItem::Interact_Implementation(APawn* InstigatorPawn)
 {
+	//Ensures the player is inside the interaction area
 	if (!Super::Interact_Implementation(InstigatorPawn)) return false;
-
+	
 	if (ensureAlwaysMsgf(Item, TEXT("Item Data asset is not set on: %s"), *GetName()))
 	{
 		UEventRouterSubsystem::BroadcastEvent(this, "UI.Inventory", FItemPickedEvent{Item});

@@ -20,22 +20,7 @@ bool ATTInteractableObject::Interact_Implementation(APawn* InstigatorPawn)
 // Sets default values
 ATTInteractableObject::ATTInteractableObject()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	SphereComponent = CreateDefaultSubobject<USphereComponent>("InteractionArea");
 	SphereComponent->SetSphereRadius(InteractionRadius);
 }
-
-// Called when the game starts or when spawned
-void ATTInteractableObject::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ATTInteractableObject::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-

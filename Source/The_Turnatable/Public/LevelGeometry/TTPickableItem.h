@@ -20,13 +20,6 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
 	UTTItem* Item;
-	
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	virtual bool Interact_Implementation(APawn* InstigatorPawn) override;
 };
