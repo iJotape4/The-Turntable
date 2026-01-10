@@ -56,38 +56,35 @@ class THE_TURNATABLE_API UEventRouterSubsystem : public UGameInstanceSubsystem
 
 public:	
 	template <typename TPayloadStruct>
-	static bool BroadcastEvent(UObject* Sender, const FName TopicName, const TPayloadStruct& Message)
+		static bool BroadcastEvent(UObject* Sender, const FGameplayTag Topic, const TPayloadStruct& Message)
 	{
-		if (!Sender) return false;
-
-		UWorld* World = Sender->GetWorld();
-		if (!World) return false;
-
-		UEventRouterSubsystem* Router = GetEventRouterSubsystem(World);
-		if (!Router) return false;
-
-		const FGameplayTag Topic = FGameplayTag::RequestGameplayTag(TopicName, false);
-		if (!Topic.IsValid()) return false;
-
-		Router->PublishTyped<TPayloadStruct>(Topic, Sender, Message);
-		return true;
-	}
-
-	static bool BroadcastEvent(UObject* Sender, const FName Topic, const FInstancedStruct& Payload)
-	{
-		if (!Sender) return false;
-		UWorld* World = Sender->GetWorld();
-		if (!World) return false;
-
-		if (UEventRouterSubsystem* Router = GetEventRouterSubsystem(World))
+		if (UEventRouterSubsystem* Router = GetValidatedRouter(Sender, Topic))
 		{
-			const FGameplayTag Tag = FGameplayTag::RequestGameplayTag(Topic, false);
-			if (!Tag.IsValid()) return false;
-
-			Router->PublishInstanced(Tag, Sender, Payload);
+			Router->PublishTyped<TPayloadStruct>(Topic, Sender, Message);
 			return true;
 		}
 		return false;
+	}
+
+	template <typename TPayloadStruct>
+	static bool BroadcastEvent(UObject* Sender, const FName TopicName, const TPayloadStruct& Message)
+	{
+		return BroadcastEvent(Sender, FGameplayTag::RequestGameplayTag(TopicName, false), Message);
+	}
+
+	static bool BroadcastEvent(UObject* Sender, const FGameplayTag Topic, const FInstancedStruct& Payload)
+	{
+		if (UEventRouterSubsystem* Router = GetValidatedRouter(Sender, Topic))
+		{
+			Router->PublishInstanced(Topic, Sender, Payload);
+			return true;
+		}
+		return false;
+	}
+
+	static bool BroadcastEvent(UObject* Sender, const FName TopicName, const FInstancedStruct& Payload)
+	{
+		return BroadcastEvent(Sender, FGameplayTag::RequestGameplayTag(TopicName, false), Payload);
 	}
 
 	template <typename TPayloadStruct, typename TObject>
@@ -161,6 +158,13 @@ private:
 	TMap<FGameplayTag, FOnEventMessage> TopicDelegates;
 	
 	static UEventRouterSubsystem* GetEventRouterSubsystem(UWorld* World);;
+
+	static UEventRouterSubsystem* GetValidatedRouter(UObject* Sender, const FGameplayTag& Topic)
+	{
+		if (!Sender || !Topic.IsValid()) return nullptr;
+		UWorld* World = Sender->GetWorld();
+		return World ? GetEventRouterSubsystem(World) : nullptr;
+	}
 };
 
 template <typename TPayloadStruct, typename TObject>
