@@ -28,7 +28,8 @@ void ATTItemDropZoneChildExample::DummyTest(const FDoorUnlockedEvent& event)
 
 bool ATTItemDropZoneChildExample::Interact_Implementation(APawn* InstigatorPawn)
 {
-	if (!bAcceptsItems) return false;
+	//Ensures the player is inside the interaction area
+	if (!Super::Interact_Implementation(InstigatorPawn)) return false;
 	
 	UEventRouterSubsystem::BroadcastEvent(this, EventTopic.GetTagName(), FMatchKeyItemEvent{this});
 	return true;
@@ -37,5 +38,4 @@ bool ATTItemDropZoneChildExample::Interact_Implementation(APawn* InstigatorPawn)
 void ATTItemDropZoneChildExample::AcceptItem()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Item accepted"));
-	bAcceptsItems = false;
 }

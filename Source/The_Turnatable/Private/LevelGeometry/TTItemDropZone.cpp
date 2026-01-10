@@ -1,8 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 #include "LevelGeometry/TTItemDropZone.h"
 
-#include "Components/BoxComponent.h"
-
+#include "Components/SphereComponent.h"
 
 // Sets default values
 ATTItemDropZone::ATTItemDropZone()
@@ -12,20 +11,20 @@ ATTItemDropZone::ATTItemDropZone()
 	DropZoneMesh = CreateDefaultSubobject<UStaticMeshComponent>("DropZoneMesh");
 	RootComponent = DropZoneMesh;
 
-	DropZoneCollider = CreateDefaultSubobject<UBoxComponent>("DropZoneCollider");
-	DropZoneCollider->SetupAttachment(RootComponent);
+	SphereComponent->SetupAttachment(DropZoneMesh);
 }
 
 bool ATTItemDropZone::Interact_Implementation(APawn* InstigatorPawn)
 {
+	if (!bAcceptsItems) return false;
 	return Super::Interact_Implementation(InstigatorPawn);
-	
 }
 
 bool ATTItemDropZone::ReceiveItem(UTTItem* Item)
 {
 	if (Item == nullptr || Item != RequiredItem) return false;
 
+	bAcceptsItems = false;
 	AcceptItem();
 	return true;
 }
