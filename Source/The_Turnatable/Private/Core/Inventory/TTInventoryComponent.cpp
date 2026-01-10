@@ -43,14 +43,12 @@ void UTTInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	InspectItemActor = GetWorld()->SpawnActor<ATTInspectItem>(InspectItemClass);
-
 	
 	InventoryPickedUpHandle = UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(
 		this, 
 		UIEventsTag, 
-		&UTTInventoryComponent::AddItem // Use '&' and the full class name
+		&UTTInventoryComponent::AddItem 
 	);
-
 	
 	InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, UIEventsTag, &UTTInventoryComponent::ToggleInventory);
 	InventoryMatchItemHandle = UEventRouterSubsystem::SubscribeToEvent<FMatchKeyItemEvent>(this, UIEventsTag, &UTTInventoryComponent::MatchKeyItemEvent);
