@@ -12,7 +12,6 @@ class USphereComponent;
 UCLASS(Abstract)
 class THE_TURNATABLE_API ATTInteractableObject : public AActor , public ITTGameplayInterface
 {
-
 	GENERATED_BODY()
 
 public:
@@ -22,8 +21,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
 	float InteractionRadius = 150.0f;
 	
-	virtual bool Interact_Implementation(APawn* InstigatorPawn) override;
-
 	// Sets default values for this actor's properties
 	ATTInteractableObject();
+	
+	virtual bool Interact_Implementation(APawn* InstigatorPawn) override;
+
+protected:
+	bool IsPlayerInRadius() const;
 };
