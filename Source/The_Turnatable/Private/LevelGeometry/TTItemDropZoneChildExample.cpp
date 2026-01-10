@@ -2,19 +2,15 @@
 
 
 #include "TTItemDropZoneChildExample.h"
-#include "Core/EventPayloads/LevelProgressPayloads.h"
 
+#include "Core/EventPayloads/InventoryEventPayloads.h"
+#include "Core/EventPayloads/LevelProgressPayloads.h"
 
 // Sets default values
 ATTItemDropZoneChildExample::ATTItemDropZoneChildExample()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-}
-
-void ATTItemDropZoneChildExample::DummyTest(const FDoorUnlockedEvent& event)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Dummy Test"));
 }
 
 // Called when the game starts or when spawned
@@ -25,8 +21,21 @@ void ATTItemDropZoneChildExample::BeginPlay()
 	DispatchEvent(FDoorUnlockedEvent());
 }
 
-// Called every frame
-void ATTItemDropZoneChildExample::Tick(float DeltaTime)
+void ATTItemDropZoneChildExample::DummyTest(const FDoorUnlockedEvent& event)
 {
-	Super::Tick(DeltaTime);
+	UE_LOG(LogTemp, Warning, TEXT("Dummy Test"));
+}
+
+bool ATTItemDropZoneChildExample::Interact_Implementation(APawn* InstigatorPawn)
+{
+	if (!bAcceptsItems) return false;
+	
+	UEventRouterSubsystem::BroadcastEvent(this, EventTopic.GetTagName(), FMatchKeyItemEvent{this});
+	return true;
+}
+
+void ATTItemDropZoneChildExample::AcceptItem()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Item accepted"));
+	bAcceptsItems = false;
 }

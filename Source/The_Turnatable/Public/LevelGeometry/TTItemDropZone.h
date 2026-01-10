@@ -14,11 +14,16 @@ UCLASS(Abstract)
 class THE_TURNATABLE_API ATTItemDropZone : public ATTInteractableObject
 {
 	GENERATED_BODY()
-
 public:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
 	UStaticMeshComponent* DropZoneMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
 	UBoxComponent* DropZoneCollider;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
+	UTTItem*RequiredItem;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
 	bool bAcceptsItems = true;
@@ -26,17 +31,16 @@ public:
 	// Sets default values for this actor's properties
 	ATTItemDropZone();
 
-	void ReceiveItem(UTTItem* Item);
-	void AcceptItem();
+	virtual bool Interact_Implementation(APawn* InstigatorPawn) override;
+	bool ReceiveItem(UTTItem* Item);
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
-	UTTItem*RequiredItem;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
 	FGameplayTag EventTopic;
 	
 	FInstancedStruct ev;
+	
+	virtual void AcceptItem() PURE_VIRTUAL(ATTItemDropZone::AcceptItem, );
 
 	template <typename TPayloadStruct>
 	void DispatchEvent(const TPayloadStruct& Payload)
@@ -45,5 +49,6 @@ protected:
 		DispatchEvent_Implementation(ev);
 	}
 
-	virtual void DispatchEvent_Implementation(const FInstancedStruct& Payload);;
+private:
+	void DispatchEvent_Implementation(const FInstancedStruct& Payload);;
 };

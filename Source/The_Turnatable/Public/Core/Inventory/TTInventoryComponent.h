@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+//#include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
 #include "Core/EventPayloads/InventoryEventPayloads.h"
 #include "TTInventoryComponent.generated.h"
@@ -11,6 +12,13 @@ class UTTInventorySlot;
 struct FInputActionValue;
 class ATTInspectItem;
 class UTTItem;
+
+UENUM(BlueprintType)
+enum class EInventoryMode : uint8
+{
+	Default,
+	MatchKeyItem,
+};
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class THE_TURNATABLE_API UTTInventoryComponent : public UActorComponent
@@ -31,30 +39,42 @@ protected:
 	bool bInventoryOpen =false;
 
 public:
+	const FName UIEventsTag = FName("UI.Inventory");
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
+	//FGameplayTag UIEventsTag;
+	
 	UTTInventoryComponent();
 
 	virtual void PostInitProperties() override;
 
+	void MatchKeyItemEvent(const FMatchKeyItemEvent& MatchKeyItemEvent);
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void AddItem(UTTItem* NewItem);
+	void AddItem(const FItemPickedEvent& Ev);
 	UFUNCTION()
 	void RemoveItem(UTTItem* ItemToRemove);
-	void RemoveItem(const FSlotSelectedEvent& Event);
+	void RemoveItem(const FItemDroppedEvent& Event);
 	
-	bool HasItem(UTTItem* ItemToCheck);
+	bool HasItem(UTTItem* ItemToCheck) const;
 	void ToggleInventory();
 	void ToggleInventory(const FInventoryToggle& Event);
+	void SlotSelected(const FSlotSelectedEvent& SlotSelectedEvent);
 
 	void RotateItem(const FInputActionValue& Value);
 	void CloseInspectView();
 
-	void OnInventoryChanged(const FItemPickedEvent& Ev);
-
 	virtual void BeginDestroy() override;
+
+	
 private:
 	FDelegateHandle InventoryPickedUpHandle;
 	FDelegateHandle InventoryToggleHandle;
+	FDelegateHandle InventoryMatchItemHandle;
 	FDelegateHandle InventorySlotSelectedHandle;
+	FDelegateHandle InventoryItemDroppedHandle;
+	
+	EInventoryMode InventoryMode = EInventoryMode::Default;
+
+	ATTItemDropZone* CurrentDropZone = nullptr;
 };

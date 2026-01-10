@@ -3,6 +3,7 @@
 
 #include "Components/BoxComponent.h"
 
+
 // Sets default values
 ATTItemDropZone::ATTItemDropZone()
 {
@@ -15,16 +16,18 @@ ATTItemDropZone::ATTItemDropZone()
 	DropZoneCollider->SetupAttachment(RootComponent);
 }
 
-void ATTItemDropZone::ReceiveItem(UTTItem* Item)
+bool ATTItemDropZone::Interact_Implementation(APawn* InstigatorPawn)
 {
-	if (Item == nullptr || Item != RequiredItem) return;
-
-	AcceptItem();
+	return Super::Interact_Implementation(InstigatorPawn);
+	
 }
 
-void ATTItemDropZone::AcceptItem()
+bool ATTItemDropZone::ReceiveItem(UTTItem* Item)
 {
-	
+	if (Item == nullptr || Item != RequiredItem) return false;
+
+	AcceptItem();
+	return true;
 }
 
 void ATTItemDropZone::DispatchEvent_Implementation(const FInstancedStruct& Payload)

@@ -15,7 +15,7 @@ void UTTInventoryUI::NativeConstruct()
 	const FName UIEventsTag = FName("UI.Inventory");
 	InventoryPickedUpItemHandle = UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(this, UIEventsTag, &UTTInventoryUI::OnAddItem);
 	InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, UIEventsTag, &UTTInventoryUI::ToggleInventory);
-	InventorySlotSelectedHandle = UEventRouterSubsystem::SubscribeToEvent<FSlotSelectedEvent>(this,UIEventsTag,&UTTInventoryUI::OnRemoveItem);
+	InventoryItemDroppedHandle = UEventRouterSubsystem::SubscribeToEvent<FItemDroppedEvent>(this,UIEventsTag,&UTTInventoryUI::OnRemoveItem);
 	
 	UE_LOG(LogTemp, Warning, TEXT("Constructed Inventory UI with BackKeyWidgetName: %s"), *BackKeyWidgetName.ToString());
 	BackKeyWidget = Cast<UTTBackKeyWidget>(GetWidgetFromName(BackKeyWidgetName));
@@ -64,7 +64,7 @@ UTTInventorySlot* UTTInventoryUI::GetInventorySlotByItem(UTTItem* Item)
 // 	BP_RemoveItem(GetInventorySlotByItem(Item));
 // }
 
-void UTTInventoryUI::OnRemoveItem(const FSlotSelectedEvent& Event)
+void UTTInventoryUI::OnRemoveItem(const FItemDroppedEvent& Event)
 {
 	BP_RemoveItem(Event.InventorySlot);
 }

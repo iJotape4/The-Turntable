@@ -1,12 +1,12 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Core/Inventory/TTInventoryComponent.h"
 #include "InputActionValue.h"
 #include "Core/EventRouterSubsystem.h"
 #include "Core/EventPayloads/InventoryEventPayloads.h"
 #include "Core/Inventory/TTItem.h"
 #include "LevelGeometry/TTInspectItem.h"
+#include "LevelGeometry/TTItemDropZone.h"
 #include "UI/TTInventorySlot.h"
 
 struct FInputActionValue;
@@ -25,31 +25,49 @@ void UTTInventoryComponent::PostInitProperties()
 	
 }
 
+void UTTInventoryComponent::MatchKeyItemEvent(const FMatchKeyItemEvent& MatchKeyItemEvent)
+{
+	if (HasItem(MatchKeyItemEvent.DropZone->RequiredItem))
+	{
+		InventoryMode = EInventoryMode::MatchKeyItem;
+		CurrentDropZone = MatchKeyItemEvent.DropZone;
+		ToggleInventory();
+		UE_LOG(LogTemp, Warning, TEXT("Toggled inventroy in mode %hhd"), InventoryMode);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Player does not have required item to match"));
+	}
+}
+
 void UTTInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	InspectItemActor = GetWorld()->SpawnActor<ATTInspectItem>(InspectItemClass);
 
-	const FName UIEventsTag = FName("UI.Inventory");
+	
 	InventoryPickedUpHandle = UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(
 		this, 
 		UIEventsTag, 
-		&UTTInventoryComponent::OnInventoryChanged // Use '&' and the full class name
+		&UTTInventoryComponent::AddItem // Use '&' and the full class name
 	);
 
+	
 	InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, UIEventsTag, &UTTInventoryComponent::ToggleInventory);
-	InventorySlotSelectedHandle = UEventRouterSubsystem::SubscribeToEvent<FSlotSelectedEvent>(this,UIEventsTag,&UTTInventoryComponent::RemoveItem);
+	InventoryMatchItemHandle = UEventRouterSubsystem::SubscribeToEvent<FMatchKeyItemEvent>(this, UIEventsTag, &UTTInventoryComponent::MatchKeyItemEvent);
+	InventorySlotSelectedHandle = UEventRouterSubsystem::SubscribeToEvent<FSlotSelectedEvent>(this,UIEventsTag,&UTTInventoryComponent::SlotSelected);
+	InventoryItemDroppedHandle = UEventRouterSubsystem::SubscribeToEvent<FItemDroppedEvent>(this,UIEventsTag,&UTTInventoryComponent::RemoveItem);
 
 }
 
-void UTTInventoryComponent::AddItem(UTTItem* NewItem)
+void UTTInventoryComponent::AddItem(const FItemPickedEvent& Ev)
 {
-	Inventory.Add(NewItem);
+	Inventory.Add(Ev.Item);
 }
 
-void UTTInventoryComponent::RemoveItem(const FSlotSelectedEvent& Event)
+void UTTInventoryComponent::RemoveItem(const FItemDroppedEvent& Event)
 {
-	Inventory.Remove(Event.InventorySlot->GetItem());
+	RemoveItem(Event.InventorySlot->GetItem());
 }
 
 void UTTInventoryComponent::RemoveItem(UTTItem* ItemToRemove)
@@ -57,14 +75,9 @@ void UTTInventoryComponent::RemoveItem(UTTItem* ItemToRemove)
 	Inventory.Remove(ItemToRemove);
 }
 
-bool UTTInventoryComponent::HasItem(UTTItem* ItemToCheck)
+bool UTTInventoryComponent::HasItem(UTTItem* ItemToCheck) const
 {
 	return Inventory.Contains(ItemToCheck);
-}
-
-void UTTInventoryComponent::ToggleInventory(const FInventoryToggle& Event)
-{
-	bInventoryOpen = Event.bOpen;
 }
 
 void UTTInventoryComponent::ToggleInventory()
@@ -77,9 +90,33 @@ void UTTInventoryComponent::ToggleInventory()
 	else
 	{
 		bInventoryOpen = !bInventoryOpen;
-		UEventRouterSubsystem::BroadcastEvent(this, "UI.Inventory", FInventoryToggle(bInventoryOpen));
+		UEventRouterSubsystem::BroadcastEvent(this, UIEventsTag, FInventoryToggle(bInventoryOpen));
 	}
 }
+
+void UTTInventoryComponent::ToggleInventory(const FInventoryToggle& Event)
+{
+	bInventoryOpen = Event.bOpen;
+}
+
+void UTTInventoryComponent::SlotSelected(const FSlotSelectedEvent& SlotSelectedEvent)
+{
+	if (InventoryMode == EInventoryMode::Default)
+	{
+		InspectItemActor->InspectItem(SlotSelectedEvent.InventorySlot->GetItem());
+	}
+	else if (InventoryMode == EInventoryMode::MatchKeyItem)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Picking in TryDropItem:"));
+		if ( CurrentDropZone->ReceiveItem(SlotSelectedEvent.InventorySlot->GetItem()))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Item dropped"));
+			UEventRouterSubsystem::BroadcastEvent(this, UIEventsTag, FItemDroppedEvent{SlotSelectedEvent.InventorySlot});
+			ToggleInventory();
+		}
+	}
+}
+
 
 void UTTInventoryComponent::RotateItem(const FInputActionValue& Value)
 {
@@ -89,12 +126,6 @@ void UTTInventoryComponent::RotateItem(const FInputActionValue& Value)
 void UTTInventoryComponent::CloseInspectView()
 {
 	InspectItemActor->CloseInspectWidget();
-}
-
-void UTTInventoryComponent::OnInventoryChanged(const FItemPickedEvent& Ev)
-{
-	UE_LOG(LogTemp, Warning, TEXT ("Inventory Changed"));
-	UE_LOG(LogTemp, Warning, TEXT ("Item: %s"), *Ev.Item->GetName());
 }
 
 void UTTInventoryComponent::BeginDestroy()

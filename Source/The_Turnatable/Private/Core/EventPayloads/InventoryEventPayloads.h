@@ -2,19 +2,17 @@
 #include "CoreMinimal.h"
 #include "InventoryEventPayloads.generated.h"
 
+enum class EInventoryMode : uint8;
 class UTTInventorySlot;
 class UTTItem;
+class ATTItemDropZone;
 
 USTRUCT()
-struct FInventoryChangedEvent
+struct FInventoryToggle
 {
 	GENERATED_BODY()
-
-	UPROPERTY()
-	int32 SlotIndex = INDEX_NONE;
-
-	UPROPERTY()
-	UTTItem* Item = nullptr;
+	bool bOpen = true;
+	EInventoryMode NewMode;
 };
 
 USTRUCT()
@@ -25,21 +23,21 @@ struct FItemPickedEvent
 };
 
 USTRUCT()
-struct FItemDroppedEvent
-{
-	GENERATED_BODY()
-	UTTItem* Item;
-};
-
-USTRUCT()
-struct FInventoryToggle
-{
-	GENERATED_BODY()
-	bool bOpen = true;
-};
-
-USTRUCT()
 struct FSlotSelectedEvent
+{
+	GENERATED_BODY()
+	UTTInventorySlot* InventorySlot;
+};
+
+USTRUCT()
+struct FMatchKeyItemEvent
+{
+	GENERATED_BODY()
+	ATTItemDropZone* DropZone;
+};
+
+USTRUCT()
+struct FItemDroppedEvent
 {
 	GENERATED_BODY()
 	UTTInventorySlot* InventorySlot;

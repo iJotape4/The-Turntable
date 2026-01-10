@@ -36,7 +36,7 @@ public:
 	
 	UFUNCTION()
 	// void OnRemoveItem(UTTItem* Item);
-	void OnRemoveItem(const FSlotSelectedEvent& Event);
+	void OnRemoveItem(const FItemDroppedEvent& Event);
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Inventory", meta = (DisplayName = "Remove Item"))
 	void BP_RemoveItem(UTTInventorySlot* InventorySlot);
@@ -61,5 +61,5 @@ protected:
 private:
 	FDelegateHandle InventoryToggleHandle;
 	FDelegateHandle InventoryPickedUpItemHandle;
-	FDelegateHandle InventorySlotSelectedHandle;
+	FDelegateHandle InventoryItemDroppedHandle;
 };
