@@ -51,6 +51,11 @@ void UEventRouterSubsystem::Publish(const FEventMessage& Message)
 	}
 }
 
+void UEventRouterSubsystem::PublishInstanced(const FGameplayTag Topic, UObject* Sender, const FInstancedStruct& Payload)
+{
+	Publish(FEventMessage::Make(Topic, Sender, Payload));
+}
+
 UEventRouterSubsystem* UEventRouterSubsystem::GetEventRouterSubsystem(UWorld* World)
 {
 	if (World == nullptr)

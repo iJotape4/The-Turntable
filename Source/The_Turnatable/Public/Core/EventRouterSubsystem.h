@@ -35,6 +35,15 @@ struct FEventMessage
 		Msg.Payload.InitializeAs<TPayloadStruct>(InPayload);
 		return Msg;
 	}
+
+	static FEventMessage Make(const FGameplayTag InTopic, UObject* InSender, const FInstancedStruct& InPayload)
+	{
+		FEventMessage Msg;
+		Msg.Topic  = InTopic;
+		Msg.Sender = InSender;
+		Msg.Payload = InPayload; // no InitializeAs here
+		return Msg;
+	}
 };
 
 // C++ multicast delegate for event delivery.
@@ -62,6 +71,23 @@ public:
 
 		Router->PublishTyped<TPayloadStruct>(Topic, Sender, Message);
 		return true;
+	}
+
+	static bool BroadcastEvent(UObject* Sender, const FName Topic, const FInstancedStruct& Payload)
+	{
+		if (!Sender) return false;
+		UWorld* World = Sender->GetWorld();
+		if (!World) return false;
+
+		if (UEventRouterSubsystem* Router = GetEventRouterSubsystem(World))
+		{
+			const FGameplayTag Tag = FGameplayTag::RequestGameplayTag(Topic, false);
+			if (!Tag.IsValid()) return false;
+
+			Router->PublishInstanced(Tag, Sender, Payload);
+			return true;
+		}
+		return false;
 	}
 
 	template <typename TPayloadStruct, typename TObject>
@@ -127,6 +153,8 @@ protected:
 	// Convenience: publish a typed payload.
 	template <typename TPayloadStruct>
 	void PublishTyped(const FGameplayTag Topic, UObject* Sender, const TPayloadStruct& Payload);
+	
+	void PublishInstanced(const FGameplayTag Topic, UObject* Sender, const FInstancedStruct& Payload);
 	
 private:
 	// Listeners keyed by the topic they subscribed to.

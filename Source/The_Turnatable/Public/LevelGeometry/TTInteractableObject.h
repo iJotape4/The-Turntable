@@ -9,7 +9,7 @@
 
 class USphereComponent;
 
-UCLASS()
+UCLASS(Abstract)
 class THE_TURNATABLE_API ATTInteractableObject : public AActor , public ITTGameplayInterface
 {
 
