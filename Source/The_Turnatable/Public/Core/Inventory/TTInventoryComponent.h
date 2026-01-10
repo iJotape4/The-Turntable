@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-//#include "GameplayTagContainer.h"
+#include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
 #include "Core/EventPayloads/InventoryEventPayloads.h"
 #include "TTInventoryComponent.generated.h"
@@ -32,6 +32,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Config")
 	ATTInspectItem* InspectItemActor;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
+	FGameplayTag UIEventsTag = FGameplayTag::RequestGameplayTag("UI.Inventory", false);
+	
 protected:
 	TArray<UTTItem*> Inventory;
 	// Sets default values for this component's properties
@@ -39,10 +42,6 @@ protected:
 	bool bInventoryOpen =false;
 
 public:
-	const FName UIEventsTag = FName("UI.Inventory");
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
-	//FGameplayTag UIEventsTag;
-	
 	UTTInventoryComponent();
 
 	virtual void PostInitProperties() override;
@@ -65,7 +64,6 @@ public:
 	void CloseInspectView();
 
 	virtual void BeginDestroy() override;
-
 	
 private:
 	FDelegateHandle InventoryPickedUpHandle;

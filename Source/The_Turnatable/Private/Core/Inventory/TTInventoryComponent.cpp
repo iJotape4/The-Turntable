@@ -4,7 +4,6 @@
 #include "InputActionValue.h"
 #include "Core/EventRouterSubsystem.h"
 #include "Core/EventPayloads/InventoryEventPayloads.h"
-#include "Core/Inventory/TTItem.h"
 #include "LevelGeometry/TTInspectItem.h"
 #include "LevelGeometry/TTItemDropZone.h"
 #include "UI/TTInventorySlot.h"

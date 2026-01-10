@@ -87,8 +87,9 @@ public:
 		return BroadcastEvent(Sender, FGameplayTag::RequestGameplayTag(TopicName, false), Payload);
 	}
 
+
 	template <typename TPayloadStruct, typename TObject>
-	static FDelegateHandle SubscribeToEvent(TObject* Listener, const FName TopicName, void (TObject::*Method)(const TPayloadStruct&))
+	static FDelegateHandle SubscribeToEvent(TObject* Listener, const FGameplayTag Topic, void (TObject::*Method)(const TPayloadStruct&))
 	{
 		static_assert(TIsDerivedFrom<TObject, UObject>::IsDerived, "Listener must be a UObject type.");
 
@@ -100,14 +101,19 @@ public:
 		UEventRouterSubsystem* Router = GetEventRouterSubsystem(World);
 		if (!Router) return FDelegateHandle();
 
-		const FGameplayTag Topic = FGameplayTag::RequestGameplayTag(TopicName, false);
 		if (!Topic.IsValid()) return FDelegateHandle();
 
 		return Router->SubscribeTyped<TPayloadStruct>(Topic, Listener, Method);
 	}
 
+	template <typename TPayloadStruct, typename TObject>
+	static FDelegateHandle SubscribeToEvent(TObject* Listener, const FName Topic, void (TObject::*Method)(const TPayloadStruct&))
+	{
+		return SubscribeToEvent(Listener, FGameplayTag::RequestGameplayTag(Topic, false), Method);
+	}
+	
 	template <typename TObject>
-	static bool UnsubscribeFromEvent(TObject* Listener, const FName Topic, FDelegateHandle& Handle)
+	static bool UnsubscribeFromEvent(TObject* Listener, const FGameplayTag Topic, FDelegateHandle& Handle)
 	{
 		static_assert(TIsDerivedFrom<TObject, UObject>::IsDerived, "Listener must be a UObject type.");
 
@@ -119,18 +125,20 @@ public:
 
 		if (UEventRouterSubsystem* Router = GetEventRouterSubsystem(World))
 		{
-			const FGameplayTag Tag = FGameplayTag::RequestGameplayTag(Topic, false);
-			if (!Tag.IsValid()) return false;
-
-			Router->Unsubscribe(Tag, Handle);
-
-			// Opcional: invalida el handle para evitar doble-unsubscribe accidental
+			if (!Topic.IsValid()) return false;
+			Router->Unsubscribe(Topic, Handle);
+			//Optional: Invalidates the handle to avoid an unsubscribe twice accidentally
 			Handle.Reset();
 
 			return true;
 		}
-
 		return false;
+	}
+
+	template <typename TObject>
+	static bool UnsubscribeFromEvent(TObject* Listener, const FName Topic, FDelegateHandle& Handle)
+	{
+		return UnsubscribeFromEvent(Listener, FGameplayTag::RequestGameplayTag(Topic, false), Handle);
 	}
 	
 protected:
