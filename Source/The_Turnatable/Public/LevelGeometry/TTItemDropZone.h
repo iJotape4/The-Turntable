@@ -5,15 +5,12 @@
 #include "CoreMinimal.h"
 #include "TTInteractableObject.h"
 #include "Core/EventRouterSubsystem.h"
-#include "Core/EventPayloads/LevelProgressPayloads.h"
 #include "TTItemDropZone.generated.h"
 
 class UBoxComponent;
 class UTTItem;
 
-
-
-UCLASS()
+UCLASS(Abstract)
 class THE_TURNATABLE_API ATTItemDropZone : public ATTInteractableObject
 {
 	GENERATED_BODY()
@@ -31,27 +28,22 @@ public:
 
 	void ReceiveItem(UTTItem* Item);
 	void AcceptItem();
-	void DummyTest(const FDoorUnlockedEvent& event);
-
-	FDoorUnlockedEvent ev;
 
 protected:
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
 	UTTItem*RequiredItem;
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
+	FGameplayTag EventTopic;
+	
+	FInstancedStruct ev;
+
 	template <typename TPayloadStruct>
 	void DispatchEvent(const TPayloadStruct& Payload)
 	{
-		FInstancedStruct Boxed;
-		Boxed.InitializeAs<TPayloadStruct>(Payload);
-		DispatchEvent_Implementation(Boxed);
+		ev.InitializeAs<TPayloadStruct>(Payload);
+		DispatchEvent_Implementation(ev);
 	}
 
-	virtual void DispatchEvent_Implementation(const FInstancedStruct& Payload);
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void DispatchEvent_Implementation(const FInstancedStruct& Payload);;
 };

@@ -1,10 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "LevelGeometry/TTItemDropZone.h"
 
 #include "Components/BoxComponent.h"
-
 
 // Sets default values
 ATTItemDropZone::ATTItemDropZone()
@@ -15,6 +12,7 @@ ATTItemDropZone::ATTItemDropZone()
 	RootComponent = DropZoneMesh;
 
 	DropZoneCollider = CreateDefaultSubobject<UBoxComponent>("DropZoneCollider");
+	DropZoneCollider->SetupAttachment(RootComponent);
 }
 
 void ATTItemDropZone::ReceiveItem(UTTItem* Item)
@@ -29,29 +27,7 @@ void ATTItemDropZone::AcceptItem()
 	
 }
 
-void ATTItemDropZone::DummyTest(const FDoorUnlockedEvent& event)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Dummy Test"));
-}
-
-
-// Called when the game starts or when spawned
-void ATTItemDropZone::BeginPlay()
-{
-	Super::BeginPlay();
-	UEventRouterSubsystem::SubscribeToEvent(this, "UI.Inventory", &ATTItemDropZone::DummyTest);
-	DispatchEvent(ev);
-}
-
 void ATTItemDropZone::DispatchEvent_Implementation(const FInstancedStruct& Payload)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Dispatching ItemDropZone Event"));
-	UEventRouterSubsystem::BroadcastEvent(this, "UI.Inventory", Payload);
+	UEventRouterSubsystem::BroadcastEvent(this, EventTopic, Payload);
 }
-
-// Called every frame
-void ATTItemDropZone::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
