@@ -7,6 +7,7 @@
 #include "Core/EventPayloads/InventoryEventPayloads.h"
 #include "HorrorPlayerController.generated.h"
 
+class UTTMainDialogueUI;
 class UTTInventoryUI;
 class UInputMappingContext;
 class UHorrorUI;
@@ -33,10 +34,15 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="UI | Inventory")
 	TSubclassOf<UTTInventoryUI> InventoryUIClass;
-	
+
 	UPROPERTY()
 	TObjectPtr<UTTInventoryUI> InventoryUI;
-
+	
+	UPROPERTY(EditAnywhere, Category="UI | Dialogues")
+	TSubclassOf<UTTMainDialogueUI> DialoguesUIClass;
+	
+	UPROPERTY()
+	TObjectPtr<UTTMainDialogueUI> DialoguesUI;
 public:
 
 	/** Constructor */

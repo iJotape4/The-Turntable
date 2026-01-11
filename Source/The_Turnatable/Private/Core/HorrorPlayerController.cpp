@@ -1,6 +1,4 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
-
-
 #include "Core/HorrorPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
@@ -12,6 +10,7 @@
 #include "Core/EventRouterSubsystem.h"
 #include "Core/Inventory/TTInventoryComponent.h"
 #include "UI/TTInventoryUI.h"
+#include "UI/TTMainDialogueUI.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 
 AHorrorPlayerController::AHorrorPlayerController()
@@ -40,7 +39,6 @@ void AHorrorPlayerController::BeginPlay()
 			UE_LOG(LogThe_Turnatable, Error, TEXT("Could not spawn mobile controls widget."));
 
 		}
-
 	}
 }
 
@@ -55,20 +53,26 @@ void AHorrorPlayerController::OnPossess(APawn* aPawn)
 		if (AHorrorCharacter* HorrorCharacter = Cast<AHorrorCharacter>(aPawn))
 		{
 			// create the UI
-			if (!HorrorUI)
+			if ensure(!HorrorUI && HorrorUIClass)
 			{
 				HorrorUI = CreateWidget<UHorrorUI>(this, HorrorUIClass);
 				HorrorUI->AddToViewport(0);
 				HorrorUI->SetupCharacter(HorrorCharacter);
 			}
 
-			if (!InventoryUI)
+			if ensure(!InventoryUI && InventoryUIClass)
 			{
 				InventoryUI = CreateWidget<UTTInventoryUI>(this, InventoryUIClass);
 				InventoryUI->SetVisibility(ESlateVisibility::Collapsed);
 				InventoryUI->AddToViewport();
 				UEventRouterSubsystem::UnsubscribeFromEvent(this, "UI.Inventory", InventoryToggleHandle);
 				InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, "UI.Inventory", &AHorrorPlayerController::ToggleInventory);
+			}
+
+			if ensure(!DialoguesUI && DialoguesUIClass)
+			{
+				DialoguesUI = CreateWidget<UTTMainDialogueUI>(this, DialoguesUIClass);
+				DialoguesUI->AddToViewport();
 			}
 		}
 	}

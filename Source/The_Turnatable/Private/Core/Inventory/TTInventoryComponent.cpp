@@ -4,6 +4,7 @@
 #include "InputActionValue.h"
 #include "Core/EventRouterSubsystem.h"
 #include "Core/EventPayloads/InventoryEventPayloads.h"
+#include "Core/EventPayloads/LevelProgressPayloads.h"
 #include "LevelGeometry/TTInspectItem.h"
 #include "LevelGeometry/TTItemDropZone.h"
 #include "UI/TTInventorySlot.h"
@@ -31,11 +32,12 @@ void UTTInventoryComponent::MatchKeyItemEvent(const FMatchKeyItemEvent& MatchKey
 		InventoryMode = EInventoryMode::MatchKeyItem;
 		CurrentDropZone = MatchKeyItemEvent.DropZone;
 		ToggleInventory();
-		UE_LOG(LogTemp, Warning, TEXT("Toggled inventroy in mode %hhd"), InventoryMode);
+		
+		UEventRouterSubsystem::BroadcastEvent(this, UIDialogueEventsTag, FGenericDialogueEvent{FText::FromString("It Seems I can put something here"), 10.0f});
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player does not have required item to match"));
+		UEventRouterSubsystem::BroadcastEvent(this, UIDialogueEventsTag, FGenericDialogueEvent{FText::FromString("I do not have required item to match")});
 	}
 }
 

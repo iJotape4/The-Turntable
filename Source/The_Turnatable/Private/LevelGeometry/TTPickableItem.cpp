@@ -4,6 +4,7 @@
 #include "Components/SphereComponent.h"
 #include "Core/EventRouterSubsystem.h"
 #include "Core/EventPayloads/InventoryEventPayloads.h"
+#include "Core/EventPayloads/LevelProgressPayloads.h"
 #include "Core/Inventory/TTItem.h"
 
 // Sets default values
@@ -14,9 +15,6 @@ ATTPickableItem::ATTPickableItem()
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(FName("StaticMeshComponent"));
 	RootComponent = StaticMeshComponent;
 	SphereComponent->SetupAttachment(StaticMeshComponent);
-	
-	if (Item)
-		StaticMeshComponent->SetStaticMesh(Item->ItemMesh);
 }
 
 bool ATTPickableItem::Interact_Implementation(APawn* InstigatorPawn)
@@ -27,7 +25,7 @@ bool ATTPickableItem::Interact_Implementation(APawn* InstigatorPawn)
 	if (ensureAlwaysMsgf(Item, TEXT("Item Data asset is not set on: %s"), *GetName()))
 	{
 		UEventRouterSubsystem::BroadcastEvent(this, "UI.Inventory", FItemPickedEvent{Item});
-		
+		UEventRouterSubsystem::BroadcastEvent(this, "UI.Dialogues", FGenericDialogueEvent{Item->PickupSentence});
 		Destroy();
 		return true;
 		

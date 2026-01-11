@@ -2,6 +2,8 @@
 #include "LevelGeometry/TTItemDropZone.h"
 
 #include "Components/SphereComponent.h"
+#include "Core/EventPayloads/LevelProgressPayloads.h"
+#include "Core/Inventory/TTItem.h"
 
 // Sets default values
 ATTItemDropZone::ATTItemDropZone()
@@ -39,6 +41,7 @@ bool ATTItemDropZone::ReceiveItem(UTTItem* Item)
 			if (Item == RequiredItem )
 			{
 				AcceptItem(RequiredItem);
+				UEventRouterSubsystem::BroadcastEvent(this, "UI.Dialogues", FGenericDialogueEvent{RequiredItem->DropOffSentence});
 				RequiredItems.Remove(RequiredItem);
 
 				if (RequiredItems.Num()<=0)
@@ -48,6 +51,10 @@ bool ATTItemDropZone::ReceiveItem(UTTItem* Item)
 					FinishPuzzle();
 				}
 				return true;
+			}
+			else
+			{
+				UEventRouterSubsystem::BroadcastEvent(this, "UI.Dialogues", FGenericDialogueEvent{FText::FromString("This item doesn't seem to fit here.")});
 			}
 		}
 	}

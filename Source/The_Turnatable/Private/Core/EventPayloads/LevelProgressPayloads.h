@@ -7,6 +7,14 @@
 #include "LevelProgressPayloads.generated.h"
 
 USTRUCT()
+struct FGenericDialogueEvent
+{
+	GENERATED_BODY()
+	FText Text;
+	float Duration= 4.0f;
+};
+
+USTRUCT()
 struct FDoorUnlockedEvent
 {
 	GENERATED_BODY()	
