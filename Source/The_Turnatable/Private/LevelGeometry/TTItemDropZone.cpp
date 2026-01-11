@@ -20,13 +20,39 @@ bool ATTItemDropZone::Interact_Implementation(APawn* InstigatorPawn)
 	return Super::Interact_Implementation(InstigatorPawn);
 }
 
+bool  ATTItemDropZone::IsItemRequired(UTTItem* Item)
+{
+	if (Item == nullptr) return false;
+	if (RequiredItems.Contains(Item)) return true;
+
+	return false;
+}
+
 bool ATTItemDropZone::ReceiveItem(UTTItem* Item)
 {
-	if (Item == nullptr || Item != RequiredItem) return false;
+	if (Item == nullptr) return false;
 
-	bAcceptsItems = false;
-	AcceptItem();
-	return true;
+	if (RequiredItems.Num() >= 0)
+	{
+		for (UTTItem* RequiredItem : RequiredItems)
+		{
+			if (Item == RequiredItem )
+			{
+				AcceptItem(RequiredItem);
+				RequiredItems.Remove(RequiredItem);
+
+				if (RequiredItems.Num()<=0)
+				{
+					bAcceptsItems = false;
+					SphereComponent->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
+					FinishPuzzle();
+				}
+				return true;
+			}
+		}
+	}
+	//else
+	return false;
 }
 
 void ATTItemDropZone::DispatchEvent_Implementation(const FInstancedStruct& Payload)

@@ -26,7 +26,7 @@ void UTTInventoryComponent::PostInitProperties()
 
 void UTTInventoryComponent::MatchKeyItemEvent(const FMatchKeyItemEvent& MatchKeyItemEvent)
 {
-	if (HasItem(MatchKeyItemEvent.DropZone->RequiredItem))
+	if (HasItem(MatchKeyItemEvent.DropZone->RequiredItems))
 	{
 		InventoryMode = EInventoryMode::MatchKeyItem;
 		CurrentDropZone = MatchKeyItemEvent.DropZone;
@@ -72,9 +72,16 @@ void UTTInventoryComponent::RemoveItem(UTTItem* ItemToRemove)
 	Inventory.Remove(ItemToRemove);
 }
 
-bool UTTInventoryComponent::HasItem(UTTItem* ItemToCheck) const
+bool UTTInventoryComponent::HasItem(TArray<UTTItem*> ItemsToCheck) const
 {
-	return Inventory.Contains(ItemToCheck);
+	for (auto ToCheck : ItemsToCheck)
+	{
+		if (Inventory.Contains(ToCheck))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void UTTInventoryComponent::ToggleInventory()

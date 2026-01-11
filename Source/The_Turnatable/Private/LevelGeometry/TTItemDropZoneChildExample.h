@@ -22,5 +22,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	virtual void AcceptItem() override;
+	virtual void AcceptItem(UTTItem* Item) override;
+	virtual void FinishPuzzle() override;
 };

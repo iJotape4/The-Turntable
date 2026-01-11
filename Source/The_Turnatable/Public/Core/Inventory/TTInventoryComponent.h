@@ -55,7 +55,7 @@ public:
 	void RemoveItem(UTTItem* ItemToRemove);
 	void RemoveItem(const FItemDroppedEvent& Event);
 	
-	bool HasItem(UTTItem* ItemToCheck) const;
+	bool HasItem(TArray<UTTItem*> ItemsToCheck) const;
 	void ToggleInventory();
 	void ToggleInventory(const FInventoryToggle& Event);
 	void SlotSelected(const FSlotSelectedEvent& SlotSelectedEvent);

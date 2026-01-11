@@ -23,8 +23,8 @@ public:
 	UBoxComponent* DropZoneCollider;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
-	UTTItem*RequiredItem;
-	
+	TArray<UTTItem*> RequiredItems;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
 	bool bAcceptsItems = true;
 	
@@ -32,6 +32,7 @@ public:
 	ATTItemDropZone();
 
 	virtual bool Interact_Implementation(APawn* InstigatorPawn) override;
+	virtual bool IsItemRequired(UTTItem* Item);
 	bool ReceiveItem(UTTItem* Item);
 
 protected:
@@ -40,7 +41,8 @@ protected:
 	
 	FInstancedStruct ev;
 	
-	virtual void AcceptItem() PURE_VIRTUAL(ATTItemDropZone::AcceptItem, );
+	virtual void AcceptItem(UTTItem* Item) PURE_VIRTUAL(ATTItemDropZone::AcceptItem, );
+	virtual void FinishPuzzle() PURE_VIRTUAL(ATTItemDropZone::FinishPuzzle,);
 
 	template <typename TPayloadStruct>
 	void DispatchEvent(const TPayloadStruct& Payload)
@@ -48,6 +50,7 @@ protected:
 		ev.InitializeAs<TPayloadStruct>(Payload);
 		DispatchEvent_Implementation(ev);
 	}
+	
 
 private:
 	void DispatchEvent_Implementation(const FInstancedStruct& Payload);;

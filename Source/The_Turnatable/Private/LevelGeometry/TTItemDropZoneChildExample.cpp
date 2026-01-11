@@ -18,7 +18,6 @@ void ATTItemDropZoneChildExample::BeginPlay()
 {
 	Super::BeginPlay();
 	UEventRouterSubsystem::SubscribeToEvent(this, EventTopic.GetTagName(), &ATTItemDropZoneChildExample::DummyTest);
-	DispatchEvent(FDoorUnlockedEvent());
 }
 
 void ATTItemDropZoneChildExample::DummyTest(const FDoorUnlockedEvent& event)
@@ -34,7 +33,13 @@ bool ATTItemDropZoneChildExample::Interact_Implementation(APawn* InstigatorPawn)
 	return true;
 }
 
-void ATTItemDropZoneChildExample::AcceptItem()
+void ATTItemDropZoneChildExample::AcceptItem(UTTItem* Item)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Item accepted"));
+}
+
+void ATTItemDropZoneChildExample::FinishPuzzle()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Puzzle finished"));
+	DispatchEvent(FDoorUnlockedEvent());
 }
