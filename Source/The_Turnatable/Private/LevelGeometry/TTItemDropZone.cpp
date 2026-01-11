@@ -41,14 +41,18 @@ bool ATTItemDropZone::ReceiveItem(UTTItem* Item)
 			if (Item == RequiredItem )
 			{
 				AcceptItem(RequiredItem);
-				UEventRouterSubsystem::BroadcastEvent(this, "UI.Dialogues", FGenericDialogueEvent{RequiredItem->DropOffSentence});
 				RequiredItems.Remove(RequiredItem);
 
 				if (RequiredItems.Num()<=0)
 				{
 					bAcceptsItems = false;
 					SphereComponent->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
+					UEventRouterSubsystem::BroadcastEvent(this, "UI.Dialogues", FGenericDialogueEvent{FText::FromString("Well done! GG WP")} );
 					FinishPuzzle();
+				}
+				else
+				{
+					UEventRouterSubsystem::BroadcastEvent(this, "UI.Dialogues", FGenericDialogueEvent{RequiredItem->DropOffSentence});
 				}
 				return true;
 			}
