@@ -9,6 +9,8 @@
 /**
  * 
  */
+DECLARE_MULTICAST_DELEGATE(FOnDataChanged);
+
 UCLASS()
 class THE_TURNATABLE_API UTTItem : public UDataAsset
 {
@@ -32,4 +34,14 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item", Transient)
 	FRotator ItemRotation = FRotator::ZeroRotator;
+
+	FOnDataChanged OnChanged;
+
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override
+	{
+		Super::PostEditChangeProperty(PropertyChangedEvent);
+		OnChanged.Broadcast();
+	}
+#endif
 };
