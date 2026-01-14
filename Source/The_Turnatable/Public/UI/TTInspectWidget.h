@@ -21,7 +21,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
 	FText Item_Description;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Config")
+	FVector2D UV;
+	
 	FOnCloseByBackKey OnCloseByBackKeyDelegate;
+
 
 	UFUNCTION()
 	virtual void NativeConstruct() override;

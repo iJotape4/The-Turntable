@@ -121,6 +121,7 @@ void AHorrorPlayerController::ToggleInventory(const FInventoryToggle& Event)
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 		{
+			//SetInputMode(FInputModeUIOnly());
 			Subsystem->ClearAllMappings();
 			for (UInputMappingContext* CurrentContext : InspectMappingContexts)
 			{
@@ -130,6 +131,7 @@ void AHorrorPlayerController::ToggleInventory(const FInventoryToggle& Event)
 	}
 	else
 	{
+		SetInputMode(FInputModeGameOnly());
 		SetupInputComponent();
 	}
 }

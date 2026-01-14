@@ -65,7 +65,8 @@ public:
 	void CloseInspectView();
 
 	virtual void BeginDestroy() override;
-	
+	void OnPointerDown(const FInputActionValue& Value);
+
 private:
 	FDelegateHandle InventoryPickedUpHandle;
 	FDelegateHandle InventoryToggleHandle;

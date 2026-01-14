@@ -55,6 +55,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category ="Input | Inventory")
 	UInputAction* CloseInspectingViewAction;
 	
+	UPROPERTY(EditAnywhere, Category ="Input | Inventory")
+	UInputAction* PointerDownAction;
+	
 	/** If true, we're sprinting */
 	bool bSprinting = false;
 

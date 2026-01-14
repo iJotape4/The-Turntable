@@ -45,6 +45,7 @@ void UTTInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	InspectItemActor = GetWorld()->SpawnActor<ATTInspectItem>(InspectItemClass);
+	InspectItemActor->SetActorLocation (FVector(1000.0f,0.0f,0.0f) );
 	
 	InventoryPickedUpHandle = UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(
 		this, 
@@ -126,7 +127,16 @@ void UTTInventoryComponent::SlotSelected(const FSlotSelectedEvent& SlotSelectedE
 
 void UTTInventoryComponent::RotateItem(const FInputActionValue& Value)
 {
+	if (!InspectItemActor->IsInspecting())
+		return;
 	InspectItemActor->RotateItem(Value.Get<FVector2D>()*3.0f);
+}
+
+void UTTInventoryComponent::OnPointerDown(const FInputActionValue& Value)
+{
+	if (!InspectItemActor->IsInspecting())
+		return;
+	InspectItemActor->CheckHitResult();
 }
 
 void UTTInventoryComponent::CloseInspectView()
@@ -139,3 +149,4 @@ void UTTInventoryComponent::BeginDestroy()
 	UEventRouterSubsystem::UnsubscribeFromEvent(this, "UI.Inventory", InventoryPickedUpHandle);
 	Super::BeginDestroy();
 }
+

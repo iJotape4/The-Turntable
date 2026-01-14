@@ -66,6 +66,7 @@ void AHorrorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 			EnhancedInputComponent->BindAction(CloseInspectingViewAction, ETriggerEvent::Started, InventoryComponent, &UTTInventoryComponent::CloseInspectView);
 			EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Started, InventoryComponent, &UTTInventoryComponent::ToggleInventory);
 			EnhancedInputComponent->BindAction(RotateInspectedItemAction, ETriggerEvent::Triggered, InventoryComponent, &UTTInventoryComponent::RotateItem);
+			EnhancedInputComponent->BindAction(PointerDownAction, ETriggerEvent::Started, InventoryComponent, &UTTInventoryComponent::OnPointerDown);
 		}
 	}
 }

@@ -35,6 +35,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Config")
 	UTTItem* LastInspectedItem;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Debug")
+	TSubclassOf<AActor> DebugStaticMesh;
 	
 	// Sets default values for this actor's properties
 	ATTInspectItem();
@@ -44,6 +47,15 @@ public:
 	bool IsInspecting() const { return bIsInspecting; }
 	
 	void RotateItem(const FVector2D LookAxisVector) const;
+
+	void CheckHitResult();
+
+	bool RayFromSceneCaptureUV(
+	USceneCaptureComponent2D* Capture,
+	float U, float V,
+	float TraceDistance,
+	FVector& OutStart,
+	FVector& OutEnd);
 	
 	UFUNCTION()
 	void CloseInspectWidget();
