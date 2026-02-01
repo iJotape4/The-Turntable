@@ -25,7 +25,7 @@ public:
 	UStaticMeshComponent* StaticMeshComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
-	UStaticMeshComponent* InteractableChildMeshComponent;
+	USkeletalMeshComponent* SkeletalMeshComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
 	UPointLightComponent* PointLightComponent;
@@ -66,5 +66,8 @@ public:
 
 protected:
 	bool bIsInspecting =false;
+	bool bIsInteractableItem = false;
+
+	USceneComponent* GetCurrentMeshComponent() const;
 	// Called when the game starts or when spawned
 };

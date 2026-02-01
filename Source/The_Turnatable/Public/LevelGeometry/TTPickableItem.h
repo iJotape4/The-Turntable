@@ -15,6 +15,7 @@ class THE_TURNATABLE_API ATTPickableItem : public ATTInteractableObject
 
 public:
 	UStaticMeshComponent* StaticMeshComponent;
+	USkeletalMeshComponent* SkeletalMeshComponent;
 	// Sets default values for this actor's properties
 	ATTPickableItem();
 
