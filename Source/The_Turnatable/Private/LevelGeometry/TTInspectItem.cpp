@@ -133,6 +133,12 @@ void ATTInspectItem::CloseInspectWidget()
 	bIsInspecting = false;
 }
 
+void ATTInspectItem::Zoom(float Value)
+{
+	float NewFOV = FMath::Clamp(SceneCaptureComponent2D->FOVAngle - Value* 5.0f, 10.0f, 90.0f);
+	SceneCaptureComponent2D->FOVAngle = NewFOV;
+}
+
 bool ATTInspectItem::RayFromSceneCaptureUV(
 	USceneCaptureComponent2D* Capture,
 	float U, float V,

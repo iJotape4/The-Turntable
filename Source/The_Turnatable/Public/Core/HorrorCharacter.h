@@ -44,19 +44,22 @@ protected:
 	UInputAction* InteractAction;
 
 	/** Inventory input action */
-	UPROPERTY(EditAnywhere, Category ="Input | Inventory")
+	UPROPERTY(EditAnywhere, Category ="Input| Inventory")
 	UInputAction* InventoryAction;
 
 	/** Inventory input action */
-	UPROPERTY(EditAnywhere, Category ="Input | Inventory")
+	UPROPERTY(EditAnywhere, Category ="Input| Inventory")
 	UInputAction* RotateInspectedItemAction;
 
 	/** Inventory input action */
-	UPROPERTY(EditAnywhere, Category ="Input | Inventory")
+	UPROPERTY(EditAnywhere, Category ="Input| Inventory")
 	UInputAction* CloseInspectingViewAction;
 	
-	UPROPERTY(EditAnywhere, Category ="Input | Inventory")
+	UPROPERTY(EditAnywhere, Category ="Input| Inventory")
 	UInputAction* PointerDownAction;
+
+	UPROPERTY(EditAnywhere, Category ="Input| Inventory")
+	UInputAction*	ZoomAction;
 	
 	/** If true, we're sprinting */
 	bool bSprinting = false;

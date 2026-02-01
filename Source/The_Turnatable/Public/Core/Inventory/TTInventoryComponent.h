@@ -66,6 +66,7 @@ public:
 
 	virtual void BeginDestroy() override;
 	void OnPointerDown(const FInputActionValue& Value);
+	void OnZoom(const FInputActionValue& InputActionValue);
 
 private:
 	FDelegateHandle InventoryPickedUpHandle;

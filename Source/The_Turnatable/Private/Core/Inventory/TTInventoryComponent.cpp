@@ -139,6 +139,13 @@ void UTTInventoryComponent::OnPointerDown(const FInputActionValue& Value)
 	InspectItemActor->CheckHitResult();
 }
 
+void UTTInventoryComponent::OnZoom(const FInputActionValue& InputActionValue)
+{
+	if (!InspectItemActor->IsInspecting())
+		return;
+	InspectItemActor->Zoom(InputActionValue.Get<float>());
+}
+
 void UTTInventoryComponent::CloseInspectView()
 {
 	InspectItemActor->CloseInspectWidget();

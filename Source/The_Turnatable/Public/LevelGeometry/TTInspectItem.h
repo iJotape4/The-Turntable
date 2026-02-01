@@ -62,7 +62,8 @@ public:
 	
 	UFUNCTION()
 	void CloseInspectWidget();
-	
+	void Zoom(float Value);
+
 protected:
 	bool bIsInspecting =false;
 	// Called when the game starts or when spawned
