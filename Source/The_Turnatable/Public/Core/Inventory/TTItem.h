@@ -37,7 +37,10 @@ public:
 	UTexture2D* ItemIcon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Item")
-	UStaticMesh* ItemMesh;
+	UStreamableRenderAsset* ItemMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item")
+	bool bIsInteractable = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item", Transient)
 	FRotator ItemRotation = FRotator::ZeroRotator;
@@ -48,6 +51,9 @@ public:
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override
 	{
 		Super::PostEditChangeProperty(PropertyChangedEvent);
+
+		bIsInteractable = Cast<USkeletalMesh>(ItemMesh) != nullptr;
+		
 		OnChanged.Broadcast();
 	}
 #endif

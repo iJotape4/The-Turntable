@@ -24,8 +24,13 @@ ATTInspectItem::ATTInspectItem()
 	SceneCaptureComponent2D->ShowFlags.Atmosphere = false;
 	SceneCaptureComponent2D->bConsiderUnrenderedOpaquePixelAsFullyTranslucent = true;
 	
-	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	StaticMeshComponent->SetupAttachment(SceneComponent);
+	StaticMeshComponent->SetCollisionProfileName(FName("BlockAllDynamic"));
+
+	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
+	SkeletalMeshComponent->SetupAttachment(SceneComponent);
+	SkeletalMeshComponent->SetCollisionProfileName(FName("BlockAllDynamic"));
 
 	PointLightComponent = CreateDefaultSubobject<UPointLightComponent>(TEXT("PointLightComponent"));
 	PointLightComponent->SetupAttachment(RootComponent);
@@ -34,29 +39,50 @@ ATTInspectItem::ATTInspectItem()
 
 void ATTInspectItem::InspectItem(UTTItem* Item)
 {
-	if (!InspectWidgetClass) return;
+	if (!InspectWidgetClass || !Item) return;
+
+	UStreamableRenderAsset* ItemMesh = Item->ItemMesh;
+
+	if (Item->bIsInteractable)
+	{
+		UE_LOG(LogTemp, Log, TEXT("USkeletalMesh::InspectItem"));
+		StaticMeshComponent->SetStaticMesh(nullptr);
+		bIsInteractableItem = true;
+		
+		SkeletalMeshComponent->SetWorldRotation(Item->ItemRotation);
+		SkeletalMeshComponent->SetSkeletalMesh(Cast<USkeletalMesh>(ItemMesh));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("UStaticMesh::InspectItem"));
+		SkeletalMeshComponent->SetSkeletalMesh(nullptr);
+		bIsInteractableItem = false;
+		
+		StaticMeshComponent->SetWorldRotation(Item->ItemRotation);
+		StaticMeshComponent->SetStaticMesh(Cast<UStaticMesh>(ItemMesh));
+	}
 	
-	StaticMeshComponent->SetStaticMesh(Item->ItemMesh);
 	if (!InspectWidget)
 	{
 		InspectWidget = Cast<UTTInspectWidget>(CreateWidget<UUserWidget>(GetWorld(), InspectWidgetClass));
 	}
+	
 	LastInspectedItem = Item;
 	InspectWidget->OnInspect(Item->ItemName, Item->ItemDescription);
 	InspectWidget->AddToViewport();
 	bIsInspecting = true;
-	StaticMeshComponent->SetWorldRotation(Item->ItemRotation);
+	
 	UE_LOG(LogTemp, Warning, TEXT("Rotation: %s"), *Item->ItemRotation.ToString());
 	InspectWidget->OnCloseByBackKeyDelegate.AddDynamic(this, &ATTInspectItem::CloseInspectWidget);
 }
 
-
 void ATTInspectItem::RotateItem(const FVector2D LookAxisVector) const
 {
+	USceneComponent* MeshComponent = GetCurrentMeshComponent();
 	
-	FRotator NewRotation = UKismetMathLibrary::ComposeRotators(StaticMeshComponent->GetComponentRotation(),
+	FRotator NewRotation = UKismetMathLibrary::ComposeRotators(MeshComponent->GetComponentRotation(),
 		FRotator(LookAxisVector.Y, LookAxisVector.X, 0.0f));
-	StaticMeshComponent->SetWorldRotation(NewRotation);
+	MeshComponent->SetWorldRotation(NewRotation);
 }
 
 void ATTInspectItem::CheckHitResult()
@@ -116,18 +142,19 @@ void ATTInspectItem::CheckHitResult()
 	// 	UE_LOG(LogTemp, Warning, TEXT("FaceIndex: %d"), Hit.FaceIndex);
 	// 	UE_LOG(LogTemp, Warning, TEXT("Component: %s"), *Hit.Component->GetName());
 	// }
-
-	if (bHit && Hit.GetComponent() == InteractableChildMeshComponent)
+	
+	if (bHit && Hit.GetComponent() == SkeletalMeshComponent)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit Skeletal Mesh Component"));
+		UE_LOG(LogTemp, Warning, TEXT("ImpactPoint: %s"), *Hit.BoneName.ToString());
 		// TODO: Add  interaction logic here
-		
 	}
 }
 
 void ATTInspectItem::CloseInspectWidget()
 {
 	if (!InspectWidget) return;
-	LastInspectedItem->ItemRotation = StaticMeshComponent->GetComponentRotation();
+	LastInspectedItem->ItemRotation = GetCurrentMeshComponent()->GetComponentRotation();
 	InspectWidget->OnCloseByBackKeyDelegate.RemoveDynamic(this, &ATTInspectItem::CloseInspectWidget);
 	InspectWidget->RemoveFromParent();
 	bIsInspecting = false;
@@ -137,6 +164,14 @@ void ATTInspectItem::Zoom(float Value)
 {
 	float NewFOV = FMath::Clamp(SceneCaptureComponent2D->FOVAngle - Value* 5.0f, 10.0f, 90.0f);
 	SceneCaptureComponent2D->FOVAngle = NewFOV;
+}
+
+USceneComponent* ATTInspectItem::GetCurrentMeshComponent() const
+{
+	USceneComponent* CurrentMeshComponent = bIsInteractableItem
+		? static_cast<USceneComponent*>(SkeletalMeshComponent)
+		: static_cast<USceneComponent*>(StaticMeshComponent);
+	return CurrentMeshComponent;
 }
 
 bool ATTInspectItem::RayFromSceneCaptureUV(

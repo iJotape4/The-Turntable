@@ -13,8 +13,11 @@ ATTPickableItem::ATTPickableItem()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(FName("StaticMeshComponent"));
+	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(FName("SkeletalMeshComponent"));
 	RootComponent = StaticMeshComponent;
+	
 	SphereComponent->SetupAttachment(StaticMeshComponent);
+	SkeletalMeshComponent->SetupAttachment(StaticMeshComponent);
 }
 
 bool ATTPickableItem::Interact_Implementation(APawn* InstigatorPawn)
@@ -40,7 +43,24 @@ void ATTPickableItem::ApplyDataAsset()
 	//UStaticMesh* NewMesh = (Item) ? Item->ItemMesh : nullptr; // if soft ptr
 	// If MeshData->Mesh is a hard pointer, just: UStaticMesh* NewMesh = MeshData ? MeshData->Mesh : nullptr;
 
-	StaticMeshComponent->SetStaticMesh(Item->ItemMesh);
+	UStreamableRenderAsset* ItemMesh = Item ? Item->ItemMesh : nullptr;
+	if (!ItemMesh) return;
+
+	if (Cast<UStaticMesh>(ItemMesh))
+	{
+		UE_LOG(LogTemp, Log, TEXT("UStaticMesh::InspectItem"));
+		StaticMeshComponent->SetStaticMesh(Cast<UStaticMesh>(ItemMesh));
+	}
+	else if (Cast<USkeletalMesh>(ItemMesh))
+	{
+		UE_LOG(LogTemp, Log, TEXT("USkeletalMesh::InspectItem"));
+		SkeletalMeshComponent->SetSkeletalMesh(Cast<USkeletalMesh>(ItemMesh));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Unsupported mesh type for item: %s"), *Item->ItemName.ToString());
+		return;
+	}
 }
 
 void ATTPickableItem::OnConstruction(const FTransform& Transform)
