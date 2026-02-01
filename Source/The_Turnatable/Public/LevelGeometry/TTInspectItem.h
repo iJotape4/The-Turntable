@@ -25,6 +25,9 @@ public:
 	UStaticMeshComponent* StaticMeshComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
+	UStaticMeshComponent* InteractableChildMeshComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
 	UPointLightComponent* PointLightComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config")
