@@ -151,13 +151,11 @@ void ATTInspectItem::CheckHitResult()
 		if (Hit.BoneName == LastInspectedItem->SocketName)
 		{
 			// TODO: Add  Animation or effect
-			
-			UEventRouterSubsystem::BroadcastEvent(this, "UI.Inventory", FItemUpdatedEvent{LastInspectedItem});
+			FName TopicName = "UI.Inventory";
+			UEventRouterSubsystem::BroadcastEvent(this, TopicName, FItemUpdatedEvent{LastInspectedItem});
 
-			UTTItem* ChildItem = LastInspectedItem->ChildItem;
-			if (!ChildItem) return;
-				
-			UEventRouterSubsystem::BroadcastEvent(this, "UI.Inventory", FItemPickedEvent{ChildItem});
+			if (UTTItem* ChildItem = LastInspectedItem->ChildItem)
+				UEventRouterSubsystem::BroadcastEvent(this, TopicName, FItemPickedEvent{ChildItem});
 			
 			CloseInspectWidget();
 		}
