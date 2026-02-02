@@ -6,6 +6,7 @@
 #include "Components/PanelWidget.h"
 #include "Core/EventRouterSubsystem.h"
 #include "Core/Inventory/TTInventoryComponent.h"
+#include "Core/Inventory/TTItem.h"
 #include "UI/TTBackKeyWidget.h"
 #include "UI/TTInventorySlot.h"
 
@@ -16,6 +17,8 @@ void UTTInventoryUI::NativeConstruct()
 	InventoryPickedUpItemHandle = UEventRouterSubsystem::SubscribeToEvent<FItemPickedEvent>(this, UIEventsTag, &UTTInventoryUI::OnAddItem);
 	InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, UIEventsTag, &UTTInventoryUI::ToggleInventory);
 	InventoryItemDroppedHandle = UEventRouterSubsystem::SubscribeToEvent<FItemDroppedEvent>(this,UIEventsTag,&UTTInventoryUI::OnRemoveItem);
+	InventoryItemUpdatedHandle = UEventRouterSubsystem::SubscribeToEvent<FItemUpdatedEvent>(this,UIEventsTag,&UTTInventoryUI::OnUpdateItem);
+
 	
 	UE_LOG(LogTemp, Warning, TEXT("Constructed Inventory UI with BackKeyWidgetName: %s"), *BackKeyWidgetName.ToString());
 	BackKeyWidget = Cast<UTTBackKeyWidget>(GetWidgetFromName(BackKeyWidgetName));
@@ -59,10 +62,13 @@ UTTInventorySlot* UTTInventoryUI::GetInventorySlotByItem(UTTItem* Item)
 	return nullptr;
 }
 
-// void UTTInventoryUI::OnRemoveItem(UTTItem* Item)
-// {
-// 	BP_RemoveItem(GetInventorySlotByItem(Item));
-// }
+void UTTInventoryUI::OnUpdateItem(const FItemUpdatedEvent& ItemUpdatedEvent)
+{
+	BP_RemoveItem(GetInventorySlotByItem(ItemUpdatedEvent.Item));
+	
+	if (UTTItem* Item = ItemUpdatedEvent.Item->RemainingItemAfterInteraction)
+		BP_AddItem(Item);
+}
 
 void UTTInventoryUI::OnRemoveItem(const FItemDroppedEvent& Event)
 {

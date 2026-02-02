@@ -20,6 +20,7 @@ class THE_TURNATABLE_API UTTInventoryUI : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+	void OnUpdateItem(const FItemUpdatedEvent& ItemUpdatedEvent);
 	virtual void NativeConstruct() override;
 	
 	UFUNCTION(BlueprintCallable)
@@ -35,7 +36,6 @@ public:
 	UTTInventorySlot* GetInventorySlotByItem(UTTItem* Item);
 	
 	UFUNCTION()
-	// void OnRemoveItem(UTTItem* Item);
 	void OnRemoveItem(const FItemDroppedEvent& Event);
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Inventory", meta = (DisplayName = "Remove Item"))
@@ -62,4 +62,5 @@ private:
 	FDelegateHandle InventoryToggleHandle;
 	FDelegateHandle InventoryPickedUpItemHandle;
 	FDelegateHandle InventoryItemDroppedHandle;
+	FDelegateHandle InventoryItemUpdatedHandle;
 };

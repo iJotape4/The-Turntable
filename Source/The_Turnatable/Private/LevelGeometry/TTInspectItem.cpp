@@ -5,6 +5,8 @@
 
 #include "Components/PointLightComponent.h"
 #include "Components/SceneCaptureComponent2D.h"
+#include "Core/EventRouterSubsystem.h"
+#include "Core/EventPayloads/InventoryEventPayloads.h"
 #include "Core/Inventory/TTItem.h"
 #include "Engine/TextureRenderTarget2D.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -145,9 +147,20 @@ void ATTInspectItem::CheckHitResult()
 	
 	if (bHit && Hit.GetComponent() == SkeletalMeshComponent)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Hit Skeletal Mesh Component"));
-		UE_LOG(LogTemp, Warning, TEXT("ImpactPoint: %s"), *Hit.BoneName.ToString());
-		// TODO: Add  interaction logic here
+		//Interaction with item in inspect vew
+		if (Hit.BoneName == LastInspectedItem->SocketName)
+		{
+			// TODO: Add  Animation or effect
+			
+			UEventRouterSubsystem::BroadcastEvent(this, "UI.Inventory", FItemUpdatedEvent{LastInspectedItem});
+
+			UTTItem* ChildItem = LastInspectedItem->ChildItem;
+			if (!ChildItem) return;
+				
+			UEventRouterSubsystem::BroadcastEvent(this, "UI.Inventory", FItemPickedEvent{ChildItem});
+			
+			CloseInspectWidget();
+		}
 	}
 }
 

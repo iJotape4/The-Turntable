@@ -30,6 +30,13 @@ struct FSlotSelectedEvent
 };
 
 USTRUCT()
+struct FItemUpdatedEvent
+{
+	GENERATED_BODY()
+	UTTItem* Item;
+};
+
+USTRUCT()
 struct FMatchKeyItemEvent
 {
 	GENERATED_BODY()

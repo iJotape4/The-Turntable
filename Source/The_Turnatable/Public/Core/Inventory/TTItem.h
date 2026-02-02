@@ -39,10 +39,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Item")
 	UStreamableRenderAsset* ItemMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="ChildItem", meta=(ToolTip="Automatically set depending on item Mesh type"))
 	bool bIsInteractable = false;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Item", Transient)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ChildItem", meta=(ToolTip="Set this when the item is interactable", EditCondition ="bIsInteractable"))
+	FName SocketName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ChildItem", meta=(ToolTip="Set this when the item is interactable", EditCondition ="bIsInteractable"))
+	UTTItem* ChildItem;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ChildItem", meta=(ToolTip="Set this when the item is interactable", EditCondition ="bIsInteractable"))
+	UTTItem* RemainingItemAfterInteraction;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Data", Transient)
 	FRotator ItemRotation = FRotator::ZeroRotator;
 
 	FOnDataChanged OnChanged;

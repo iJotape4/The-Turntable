@@ -48,6 +48,7 @@ public:
 	virtual void PostInitProperties() override;
 
 	void MatchKeyItemEvent(const FMatchKeyItemEvent& MatchKeyItemEvent);
+	void UpdateItem(const FItemUpdatedEvent& ItemUpdatedEvent);
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
@@ -70,6 +71,7 @@ public:
 
 private:
 	FDelegateHandle InventoryPickedUpHandle;
+	FDelegateHandle InventoryItemUpdatedHandle;
 	FDelegateHandle InventoryToggleHandle;
 	FDelegateHandle InventoryMatchItemHandle;
 	FDelegateHandle InventorySlotSelectedHandle;

@@ -5,6 +5,7 @@
 #include "Core/EventRouterSubsystem.h"
 #include "Core/EventPayloads/InventoryEventPayloads.h"
 #include "Core/EventPayloads/LevelProgressPayloads.h"
+#include "Core/Inventory/TTItem.h"
 #include "LevelGeometry/TTInspectItem.h"
 #include "LevelGeometry/TTItemDropZone.h"
 #include "UI/TTInventorySlot.h"
@@ -41,6 +42,13 @@ void UTTInventoryComponent::MatchKeyItemEvent(const FMatchKeyItemEvent& MatchKey
 	}
 }
 
+void UTTInventoryComponent::UpdateItem(const FItemUpdatedEvent& ItemUpdatedEvent)
+{
+	Inventory.Remove(ItemUpdatedEvent.Item);
+	if (UTTItem* Item = ItemUpdatedEvent.Item->RemainingItemAfterInteraction)
+		Inventory.Add(Item);
+}
+
 void UTTInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -57,12 +65,14 @@ void UTTInventoryComponent::BeginPlay()
 	InventoryMatchItemHandle = UEventRouterSubsystem::SubscribeToEvent<FMatchKeyItemEvent>(this, UIEventsTag, &UTTInventoryComponent::MatchKeyItemEvent);
 	InventorySlotSelectedHandle = UEventRouterSubsystem::SubscribeToEvent<FSlotSelectedEvent>(this,UIEventsTag,&UTTInventoryComponent::SlotSelected);
 	InventoryItemDroppedHandle = UEventRouterSubsystem::SubscribeToEvent<FItemDroppedEvent>(this,UIEventsTag,&UTTInventoryComponent::RemoveItem);
+	InventoryItemUpdatedHandle = UEventRouterSubsystem::SubscribeToEvent<FItemUpdatedEvent>(this,UIEventsTag,&UTTInventoryComponent::UpdateItem);
 
 }
 
 void UTTInventoryComponent::AddItem(const FItemPickedEvent& Ev)
 {
 	Inventory.Add(Ev.Item);
+	UEventRouterSubsystem::BroadcastEvent(this, "UI.Dialogues", FGenericDialogueEvent{Ev.Item->PickupSentence});
 }
 
 void UTTInventoryComponent::RemoveItem(const FItemDroppedEvent& Event)
