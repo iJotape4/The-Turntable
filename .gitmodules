@@ -1,0 +1,3 @@
+[submodule "Plugins/EventRouter"]
+	path = Plugins/EventRouter
+	url = https://github.com/UnrealPlugin/EventRouter
