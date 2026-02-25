@@ -28,20 +28,8 @@ protected:
 	/** Pointer to the UI widget */
 	UPROPERTY()
 	TObjectPtr<UHorrorUI> HorrorUI;
-	//
-	// UPROPERTY(EditAnywhere, Category="UI | Inventory")
-	// TSubclassOf<UTTInventoryUI> InventoryUIClass;
-	//
-	// UPROPERTY()
-	// TObjectPtr<UTTInventoryUI> InventoryUI;
-	//
-	// UPROPERTY(EditAnywhere, Category="UI | Dialogues")
-	// TSubclassOf<UTTMainDialogueUI> DialoguesUIClass;
-	//
-	// UPROPERTY()
-	// TObjectPtr<UTTMainDialogueUI> DialoguesUI;
+	
 public:
-
 	/** Constructor */
 	AHorrorPlayerController();
 
@@ -56,8 +44,7 @@ protected:
 	/** Input Mapping Contexts */
 	UPROPERTY(EditAnywhere, Category="Input|Input Mappings")
 	TArray<UInputMappingContext*> MobileExcludedMappingContexts;
-
-
+	
 	/** Mobile controls widget to spawn */
 	UPROPERTY(EditAnywhere, Category="Input|Touch Controls")
 	TSubclassOf<UUserWidget> MobileControlsWidgetClass;
@@ -80,9 +67,4 @@ protected:
 
 	/** Returns true if the player should use UMG touch controls */
 	bool ShouldUseTouchControls() const;
-
-	//UFUNCTION()
-	//void ToggleInventory(const FInventoryToggle& Event);
-// private:
-// 	FDelegateHandle InventoryToggleHandle;
 };

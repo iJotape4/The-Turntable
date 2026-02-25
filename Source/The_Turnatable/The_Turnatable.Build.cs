@@ -25,6 +25,7 @@ public class The_Turnatable : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
 			"EventRouter",
+			"UIUtils",
 			"Inventory",
 			"InteractionFramework",
 			"InspectionFramework",
