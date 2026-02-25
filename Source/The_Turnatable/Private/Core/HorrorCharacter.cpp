@@ -9,8 +9,6 @@
 #include "Components/SpotLightComponent.h"
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
-#include "Core/TTInteractionComponent.h"
-#include "Core/Inventory/TTInventoryComponent.h"
 
 AHorrorCharacter::AHorrorCharacter()
 {
@@ -24,9 +22,6 @@ AHorrorCharacter::AHorrorCharacter()
 	SpotLight->AttenuationRadius = 1050.0f;
 	SpotLight->InnerConeAngle = 18.7f;
 	SpotLight->OuterConeAngle = 45.24f;
-
-	InteractionComponent = CreateDefaultSubobject<UTTInteractionComponent>(TEXT("Interaction Component"));
-	InventoryComponent = CreateDefaultSubobject<UTTInventoryComponent>(TEXT("Inventory Component"));
 }
 
 void AHorrorCharacter::BeginPlay()
@@ -62,13 +57,7 @@ void AHorrorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 			// Sprinting
 			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AHorrorCharacter::DoStartSprint);
 			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AHorrorCharacter::DoEndSprint);
-			EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, InteractionComponent	, &UTTInteractionComponent::PrimaryInteract);
-			EnhancedInputComponent->BindAction(CloseInspectingViewAction, ETriggerEvent::Started, InventoryComponent, &UTTInventoryComponent::CloseInspectView);
-			EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Started, InventoryComponent, &UTTInventoryComponent::ToggleInventory);
-			EnhancedInputComponent->BindAction(RotateInspectedItemAction, ETriggerEvent::Triggered, InventoryComponent, &UTTInventoryComponent::RotateItem);
-			EnhancedInputComponent->BindAction(PointerDownAction, ETriggerEvent::Started, InventoryComponent, &UTTInventoryComponent::OnPointerDown);
-			EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Triggered, InventoryComponent, &UTTInventoryComponent::OnZoom);
-		}
+			}
 	}
 }
 
@@ -86,7 +75,6 @@ void AHorrorCharacter::DoStartSprint()
 		// call the sprint state changed delegate
 		OnSprintStateChanged.Broadcast(true);
 	}
-
 }
 
 void AHorrorCharacter::DoEndSprint()
@@ -144,10 +132,7 @@ void AHorrorCharacter::SprintFixedTick()
 			// update the sprint state depending on whether the button is down or not
 			OnSprintStateChanged.Broadcast(bSprinting);
 		}
-
 	}
-
 	// broadcast the sprint meter updated delegate
 	OnSprintMeterUpdated.Broadcast(SprintMeter / SprintTime);
-
 }

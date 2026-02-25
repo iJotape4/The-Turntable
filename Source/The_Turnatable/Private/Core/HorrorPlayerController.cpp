@@ -7,10 +7,6 @@
 #include "Core/HorrorCharacter.h"
 #include "UI/HorrorUI.h"
 #include "The_Turnatable.h"
-#include "Core/EventRouterSubsystem.h"
-#include "Core/Inventory/TTInventoryComponent.h"
-#include "UI/TTInventoryUI.h"
-#include "UI/TTMainDialogueUI.h"
 #include "Widgets/Input/SVirtualJoystick.h"
 
 AHorrorPlayerController::AHorrorPlayerController()
@@ -60,20 +56,20 @@ void AHorrorPlayerController::OnPossess(APawn* aPawn)
 				HorrorUI->SetupCharacter(HorrorCharacter);
 			}
 
-			if ensure(!InventoryUI && InventoryUIClass)
-			{
-				InventoryUI = CreateWidget<UTTInventoryUI>(this, InventoryUIClass);
-				InventoryUI->SetVisibility(ESlateVisibility::Collapsed);
-				InventoryUI->AddToViewport();
-				UEventRouterSubsystem::UnsubscribeFromEvent(this, "UI.Inventory", InventoryToggleHandle);
-				InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, "UI.Inventory", &AHorrorPlayerController::ToggleInventory);
-			}
-
-			if ensure(!DialoguesUI && DialoguesUIClass)
-			{
-				DialoguesUI = CreateWidget<UTTMainDialogueUI>(this, DialoguesUIClass);
-				DialoguesUI->AddToViewport();
-			}
+			// if ensure(!InventoryUI && InventoryUIClass)
+			// {
+			// 	InventoryUI = CreateWidget<UTTInventoryUI>(this, InventoryUIClass);
+			// 	InventoryUI->SetVisibility(ESlateVisibility::Collapsed);
+			// 	InventoryUI->AddToViewport();
+			// 	UEventRouterSubsystem::UnsubscribeFromEvent(this, "UI.Inventory", InventoryToggleHandle);
+			// 	InventoryToggleHandle = UEventRouterSubsystem::SubscribeToEvent<FInventoryToggle>(this, "UI.Inventory", &AHorrorPlayerController::ToggleInventory);
+			// }
+			//
+			// if ensure(!DialoguesUI && DialoguesUIClass)
+			// {
+			// 	DialoguesUI = CreateWidget<UTTMainDialogueUI>(this, DialoguesUIClass);
+			// 	DialoguesUI->AddToViewport();
+			// }
 		}
 	}
 }
@@ -111,27 +107,27 @@ bool AHorrorPlayerController::ShouldUseTouchControls() const
 	return SVirtualJoystick::ShouldDisplayTouchInterface() || bForceTouchControls;
 }
 
-void AHorrorPlayerController::ToggleInventory(const FInventoryToggle& Event)
-{
-	const bool bOpen = Event.bOpen;
-	bEnableClickEvents = bOpen;
-	bShowMouseCursor = bOpen;
-
-	if (bOpen)
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
-		{
-			SetInputMode(FInputModeGameAndUI());
-			Subsystem->ClearAllMappings();
-			for (UInputMappingContext* CurrentContext : InspectMappingContexts)
-			{
-				Subsystem->AddMappingContext(CurrentContext, 0);
-			}
-		}
-	}
-	else
-	{
-		SetInputMode(FInputModeGameOnly());
-		SetupInputComponent();
-	}
-}
+// void AHorrorPlayerController::ToggleInventory(const FInventoryToggle& Event)
+// {
+// 	const bool bOpen = Event.bOpen;
+// 	bEnableClickEvents = bOpen;
+// 	bShowMouseCursor = bOpen;
+//
+// 	if (bOpen)
+// 	{
+// 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+// 		{
+// 			SetInputMode(FInputModeGameAndUI());
+// 			Subsystem->ClearAllMappings();
+// 			for (UInputMappingContext* CurrentContext : InspectMappingContexts)
+// 			{
+// 				Subsystem->AddMappingContext(CurrentContext, 0);
+// 			}
+// 		}
+// 	}
+// 	else
+// 	{
+// 		SetInputMode(FInputModeGameOnly());
+// 		SetupInputComponent();
+// 	}
+// }

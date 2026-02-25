@@ -22,7 +22,13 @@ public class The_Turnatable : ModuleRules
 			"GameplayTags",
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { });
+		PrivateDependencyModuleNames.AddRange(new string[]
+		{
+			"EventRouter",
+			"Inventory",
+			"InteractionFramework",
+			"InspectionFramework",
+		});
 
 		PublicIncludePaths.AddRange(new string[] {
 			"The_Turnatable",

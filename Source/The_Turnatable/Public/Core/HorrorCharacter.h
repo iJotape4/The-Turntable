@@ -6,10 +6,8 @@
 #include "The_TurnatableCharacter.h"
 #include "HorrorCharacter.generated.h"
 
-class UTTInteractionComponent;
 class USpotLightComponent;
 class UInputAction;
-class UTTInventoryComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateSprintMeterDelegate, float, Percentage);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSprintStateChangedDelegate, bool, bSprinting);
@@ -26,40 +24,12 @@ class THE_TURNATABLE_API AHorrorCharacter : public AThe_TurnatableCharacter
 	/** Player light source */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	USpotLightComponent* SpotLight;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	UTTInteractionComponent* InteractionComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
-	UTTInventoryComponent* InventoryComponent;
 	
 protected:
 
 	/** Sprint input action */
 	UPROPERTY(EditAnywhere, Category ="Input")
 	UInputAction* SprintAction;
-
-	/** Interact input action */
-	UPROPERTY(EditAnywhere, Category ="Input")
-	UInputAction* InteractAction;
-
-	/** Inventory input action */
-	UPROPERTY(EditAnywhere, Category ="Input| Inventory")
-	UInputAction* InventoryAction;
-
-	/** Inventory input action */
-	UPROPERTY(EditAnywhere, Category ="Input| Inventory")
-	UInputAction* RotateInspectedItemAction;
-
-	/** Inventory input action */
-	UPROPERTY(EditAnywhere, Category ="Input| Inventory")
-	UInputAction* CloseInspectingViewAction;
-	
-	UPROPERTY(EditAnywhere, Category ="Input| Inventory")
-	UInputAction* PointerDownAction;
-
-	UPROPERTY(EditAnywhere, Category ="Input| Inventory")
-	UInputAction*	ZoomAction;
 	
 	/** If true, we're sprinting */
 	bool bSprinting = false;
@@ -118,9 +88,7 @@ protected:
 
 	/** Set up input action bindings */
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
-
-protected:
-
+	
 	/** Starts sprinting behavior */
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void DoStartSprint();

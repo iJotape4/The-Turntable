@@ -1,0 +1,38 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Inventory",
+	"Description": "InventoryPLugin",
+	"Category": "Other",
+	"CreatedBy": "Jotape",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "Inventory",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "EventRouter",
+			"Enabled": true
+		},
+		{
+			"Name": "InteractionFramework",
+			"Enabled": true
+		},
+		{
+			"Name": "UIUtils",
+			"Enabled": true
+		}
+	]
+}

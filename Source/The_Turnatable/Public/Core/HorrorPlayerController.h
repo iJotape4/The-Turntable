@@ -4,11 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "Core/EventPayloads/InventoryEventPayloads.h"
 #include "HorrorPlayerController.generated.h"
 
-class UTTMainDialogueUI;
-class UTTInventoryUI;
 class UInputMappingContext;
 class UHorrorUI;
 
@@ -31,18 +28,18 @@ protected:
 	/** Pointer to the UI widget */
 	UPROPERTY()
 	TObjectPtr<UHorrorUI> HorrorUI;
-
-	UPROPERTY(EditAnywhere, Category="UI | Inventory")
-	TSubclassOf<UTTInventoryUI> InventoryUIClass;
-
-	UPROPERTY()
-	TObjectPtr<UTTInventoryUI> InventoryUI;
-	
-	UPROPERTY(EditAnywhere, Category="UI | Dialogues")
-	TSubclassOf<UTTMainDialogueUI> DialoguesUIClass;
-	
-	UPROPERTY()
-	TObjectPtr<UTTMainDialogueUI> DialoguesUI;
+	//
+	// UPROPERTY(EditAnywhere, Category="UI | Inventory")
+	// TSubclassOf<UTTInventoryUI> InventoryUIClass;
+	//
+	// UPROPERTY()
+	// TObjectPtr<UTTInventoryUI> InventoryUI;
+	//
+	// UPROPERTY(EditAnywhere, Category="UI | Dialogues")
+	// TSubclassOf<UTTMainDialogueUI> DialoguesUIClass;
+	//
+	// UPROPERTY()
+	// TObjectPtr<UTTMainDialogueUI> DialoguesUI;
 public:
 
 	/** Constructor */
@@ -84,8 +81,8 @@ protected:
 	/** Returns true if the player should use UMG touch controls */
 	bool ShouldUseTouchControls() const;
 
-	UFUNCTION()
-	void ToggleInventory(const FInventoryToggle& Event);
-private:
-	FDelegateHandle InventoryToggleHandle;
+	//UFUNCTION()
+	//void ToggleInventory(const FInventoryToggle& Event);
+// private:
+// 	FDelegateHandle InventoryToggleHandle;
 };
