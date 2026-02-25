@@ -7,3 +7,6 @@
 [submodule "Plugins/UIUtils"]
 	path = Plugins/UIUtils
 	url = https://github.com/UnrealPlugin/UIUtils
+[submodule "Plugins/Inventory"]
+	path = Plugins/Inventory
+	url = https://github.com/UnrealPlugin/Inventory
