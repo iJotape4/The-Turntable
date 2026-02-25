@@ -39,7 +39,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Config")
 	UMPItem* LastInspectedItem;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Debug")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Config|Debug")
 	TSubclassOf<AActor> DebugStaticMesh;
 	
 	// Sets default values for this actor's properties
@@ -65,7 +65,9 @@ public:
 	void Zoom(float Value);
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Debug")
 	bool bIsInspecting =false;
+	
 	bool bIsInteractableItem = false;
 
 	USceneComponent* GetCurrentMeshComponent() const;
