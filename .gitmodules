@@ -4,3 +4,6 @@
 [submodule "Plugins/InteractionFramework"]
 	path = Plugins/InteractionFramework
 	url = https://github.com/UnrealPlugin/InteractionFramework
+[submodule "Plugins/UIUtils"]
+	path = Plugins/UIUtils
+	url = https://github.com/UnrealPlugin/UIUtils
