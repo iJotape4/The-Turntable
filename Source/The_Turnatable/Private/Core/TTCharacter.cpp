@@ -7,7 +7,7 @@
 #include "MPInspectableInventoryComponent.h"
 #include "MPInteractionComponent.h"
 
-void ATTCharacter::TTCharacter()
+ATTCharacter::ATTCharacter()
 {
 	InteractionComponent = CreateDefaultSubobject<UMPInteractionComponent>(TEXT("Interaction Component"));
 	InventoryComponent = CreateDefaultSubobject<UMPInspectableInventoryComponent>(TEXT("Inventory Component"));

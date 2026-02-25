@@ -44,9 +44,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category ="Input| Inventory")
 	UInputAction*	ZoomAction;
-
-	
-	void TTCharacter();
+	ATTCharacter();
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	
 	void HandleRotateItem(const FInputActionValue& InputActionValue);
