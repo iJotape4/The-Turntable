@@ -1,3 +1,6 @@
 [submodule "Plugins/EventRouter"]
 	path = Plugins/EventRouter
 	url = https://github.com/UnrealPlugin/EventRouter
+[submodule "Plugins/InteractionFramework"]
+	path = Plugins/InteractionFramework
+	url = https://github.com/UnrealPlugin/InteractionFramework
