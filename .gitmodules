@@ -10,3 +10,6 @@
 [submodule "Plugins/Inventory"]
 	path = Plugins/Inventory
 	url = https://github.com/UnrealPlugin/Inventory
+[submodule "Plugins/InspectionFramework"]
+	path = Plugins/InspectionFramework
+	url = https://github.com/UnrealPlugin/InspectionFramework
