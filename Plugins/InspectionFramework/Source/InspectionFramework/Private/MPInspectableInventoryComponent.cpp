@@ -7,8 +7,11 @@
 void UMPInspectableInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	InspectItemActor = GetWorld()->SpawnActor<AMPInspectItem>(InspectItemClass);
-	InspectItemActor->SetActorLocation (FVector(1000.0f,0.0f,1000.0f) );	
+	if ensure (InspectItemClass)
+	{
+		InspectItemActor = GetWorld()->SpawnActor<AMPInspectItem>(InspectItemClass);
+		InspectItemActor->SetActorLocation (FVector(1000.0f,0.0f,1000.0f) );
+	}
 }
 
 void UMPInspectableInventoryComponent::ToggleInventory()
