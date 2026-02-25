@@ -22,10 +22,9 @@ void ATTCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, InteractionComponent	, &UMPInteractionComponent::PrimaryInteract);
 
 		//Inventory
-		EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Started, InventoryComponent, &UMPInventoryComponent::ToggleInventory);
+		EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Started, InventoryComponent, &UMPInspectableInventoryComponent::ToggleInventory);
 
 		//Inspection
-		EnhancedInputComponent->BindAction(CloseInspectingViewAction, ETriggerEvent::Started, InventoryComponent, &UMPInspectableInventoryComponent::CloseInspectView);
 		EnhancedInputComponent->BindAction(PointerDownAction, ETriggerEvent::Started, InventoryComponent, &UMPInspectableInventoryComponent::OnPointerDown);
 		EnhancedInputComponent->BindAction(RotateInspectedItemAction, ETriggerEvent::Triggered, this, &ATTCharacter::HandleRotateItem);
 		EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &ATTCharacter::HandleZoom);
